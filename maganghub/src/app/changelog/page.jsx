@@ -2,12 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import {
-  Clock,
-  Sparkles,
-  CheckCircle2,
-  AlertTriangle,
-} from "lucide-react";
+import { Clock, Sparkles, CheckCircle2, AlertTriangle } from "lucide-react";
 
 export default function ChangelogPage() {
   const [isDark, setIsDark] = useState(false);
@@ -20,14 +15,11 @@ export default function ChangelogPage() {
     const observer = new MutationObserver(() =>
       setIsDark(document.documentElement.classList.contains("dark"))
     );
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
 
-  // 🌐 Deteksi Bahasa
+  // 🌐 Deteksi Bahasa (🇮🇩 / 🇬🇧)
   useEffect(() => {
     const loadLang = () => setLang(localStorage.getItem("lang") || "id");
     loadLang();
@@ -35,26 +27,60 @@ export default function ChangelogPage() {
     return () => window.removeEventListener("languageChange", loadLang);
   }, []);
 
-  // 🔖 Data Changelog (v0.0.1)
-  const changelog = [
-    {
-      version: "v0.0.1",
-      date: "12 November 2025",
-      highlights: ["Rilis Awal (Beta)", "Mode Gelap 🌙", "Mode Ganti Bahasa 🌐"],
-      details: [
-        "Menambahkan tampilan awal website Namura Property.",
-        "Fitur Mode Gelap otomatis mendeteksi preferensi sistem pengguna.",
-        "Menambahkan opsi pergantian bahasa (🇮🇩 / 🇬🇧).",
-        "Menampilkan menu utama: Carikan Properti, Iklankan Properti, Cari Agen, dan Promo Properti.",
-        "Menambahkan halaman Panduan, Tentang, dan Kontak.",
-      ],
-      pending: [
-        "Login belum berfungsi (masih statis).",
-        "Promo Properti, Tanya Forum, dan menu lainnya belum aktif.",
-        "Beberapa fitur interaktif masih dalam tahap pengembangan.",
+  // 🗂️ Data bilingual
+  const data = {
+    id: {
+      title: "Catatan Perubahan",
+      subtitle: "Dokumentasi versi dan perkembangan fitur Namura Property.",
+      sectionPending: "Dalam Pengembangan",
+      changelog: [
+        {
+          version: "v0.0.1",
+          date: "12 November 2025",
+          highlights: ["Rilis Awal (Beta)", "Mode Gelap 🌙", "Mode Ganti Bahasa 🌐"],
+          details: [
+            "Menambahkan tampilan awal website Namura Property.",
+            "Fitur Mode Gelap otomatis mendeteksi preferensi sistem pengguna.",
+            "Menambahkan opsi pergantian bahasa (🇮🇩 / 🇬🇧).",
+            "Menampilkan menu utama: Carikan Properti, Iklankan Properti, Cari Agen, dan Promo Properti.",
+            "Menambahkan halaman Panduan, Tentang, dan Kontak.",
+          ],
+          pending: [
+            "Login belum berfungsi (masih statis).",
+            "Promo Properti, Tanya Forum, dan menu lainnya belum aktif.",
+            "Beberapa fitur interaktif masih dalam tahap pengembangan.",
+          ],
+        },
       ],
     },
-  ];
+    en: {
+      title: "Changelog",
+      subtitle: "Version history and feature development log for Namura Property.",
+      sectionPending: "In Development",
+      changelog: [
+        {
+          version: "v0.0.1",
+          date: "November 12, 2025",
+          highlights: ["Initial Release (Beta)", "Dark Mode 🌙", "Language Switcher 🌐"],
+          details: [
+            "Added initial Namura Property website layout.",
+            "Dark Mode now detects user’s system theme automatically.",
+            "Added bilingual option (🇮🇩 / 🇬🇧).",
+            "Introduced main menus: Find Property, Advertise Property, Find Agent, and Property Promo.",
+            "Added informational pages: Guide, About, and Contact.",
+          ],
+          pending: [
+            "Login feature not functional yet (static).",
+            "Promo Property, Forum, and other menus are not yet available.",
+            "Some interactive features are still in development.",
+          ],
+        },
+      ],
+    },
+  };
+
+  const text = data[lang];
+  const changelog = text.changelog;
 
   return (
     <main
@@ -81,7 +107,7 @@ export default function ChangelogPage() {
                 : "text-[#00a48f]"
             }`}
           >
-            {lang === "id" ? "Catatan Perubahan" : "Changelog"}
+            {text.title}
           </motion.h1>
 
           <motion.p
@@ -92,9 +118,7 @@ export default function ChangelogPage() {
               isDark ? "text-gray-300" : "text-gray-600"
             }`}
           >
-            {lang === "id"
-              ? "Dokumentasi versi dan perkembangan fitur Namura Property."
-              : "Version history and feature development log for Namura Property."}
+            {text.subtitle}
           </motion.p>
         </div>
       </section>
@@ -117,7 +141,7 @@ export default function ChangelogPage() {
               transition={{ duration: 0.4 }}
               className="grid md:grid-cols-2 gap-6 md:gap-10 items-start relative"
             >
-              {/* Left Side */}
+              {/* LEFT SIDE */}
               <div className={`md:text-right ${i % 2 === 1 ? "md:order-2" : ""}`}>
                 <div
                   className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[12px] border ${
@@ -150,7 +174,7 @@ export default function ChangelogPage() {
                 </ul>
               </div>
 
-              {/* Right Side */}
+              {/* RIGHT SIDE */}
               <div className={`relative ${i % 2 === 1 ? "md:order-1" : ""}`}>
                 <div className="hidden md:block absolute left-[-1.1rem] top-2 w-2.5 h-2.5 rounded-full bg-[#00ccb0] shadow-[0_0_24px_rgba(0,204,176,0.5)]" />
                 <div
@@ -182,7 +206,7 @@ export default function ChangelogPage() {
                             isDark ? "text-gray-400" : "text-gray-500"
                           }`}
                         >
-                          Dalam Pengembangan
+                          {text.sectionPending}
                         </p>
                         {log.pending.map((p, k) => (
                           <li

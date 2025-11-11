@@ -16,6 +16,7 @@ import {
 
 export default function StatusPage() {
   const [isDark, setIsDark] = useState(false);
+  const [lang, setLang] = useState("id");
 
   // 🌙 Deteksi mode gelap
   useEffect(() => {
@@ -28,70 +29,151 @@ export default function StatusPage() {
     return () => observer.disconnect();
   }, []);
 
-  // Data Status Manual
-  const systemStatus = {
-    overall: "operational", // operational | partial | down
-    lastUpdated: "11 November 2025, 22:30 WIB",
-    components: [
-      {
-        name: "Website Utama",
-        status: "operational",
-        description: "Halaman utama, navigasi, dan informasi dasar berjalan normal.",
-        icon: <Wifi className="w-5 h-5" />,
+  // 🌐 Deteksi bahasa aktif
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+    window.addEventListener("languageChange", loadLang);
+    return () => window.removeEventListener("languageChange", loadLang);
+  }, []);
+
+  // 📊 Data status bilingual
+  const data = {
+    id: {
+      title: "Status Sistem",
+      subtitle:
+        "Laporan real-time kondisi layanan Namura Property, pembaruan sistem, dan pemeliharaan.",
+      lastUpdatedLabel: "Pembaruan terakhir:",
+      overall: {
+        operational: "Semua Sistem Berjalan Normal",
+        partial: "Beberapa Sistem Terganggu",
+        maintenance: "Sedang Maintenance",
+        down: "Gangguan Sistem",
       },
-      {
-        name: "Server API",
-        status: "maintenance",
-        description: "Dalam proses konfigurasi dan pengujian login & data dinamis.",
-        icon: <Server className="w-5 h-5" />,
+      badges: {
+        operational: "Normal",
+        partial: "Terbatas",
+        maintenance: "Maintenance",
+        offline: "Offline",
       },
-      {
-        name: "Basis Data (Database)",
-        status: "partial",
-        description: "Sebagian data masih statis. Integrasi backend dijadwalkan pada rilis berikutnya.",
-        icon: <Database className="w-5 h-5" />,
+      components: [
+        {
+          name: "Website Utama",
+          status: "operational",
+          description: "Halaman utama, navigasi, dan informasi dasar berjalan normal.",
+          icon: <Wifi className="w-5 h-5" />,
+        },
+        {
+          name: "Server API",
+          status: "maintenance",
+          description: "Dalam proses konfigurasi dan pengujian login & data dinamis.",
+          icon: <Server className="w-5 h-5" />,
+        },
+        {
+          name: "Basis Data (Database)",
+          status: "partial",
+          description:
+            "Sebagian data masih statis. Integrasi backend dijadwalkan pada rilis berikutnya.",
+          icon: <Database className="w-5 h-5" />,
+        },
+        {
+          name: "Carikan Properti",
+          status: "operational",
+          description:
+            "Fitur tersedia dan menampilkan hasil statis sesuai preferensi pengguna.",
+          icon: <Cloud className="w-5 h-5" />,
+        },
+        {
+          name: "Promo Properti",
+          status: "offline",
+          description: "Belum aktif — akan diaktifkan setelah fase login dan integrasi API.",
+          icon: <Activity className="w-5 h-5" />,
+        },
+      ],
+    },
+
+    en: {
+      title: "System Status",
+      subtitle:
+        "Real-time report on Namura Property service conditions, system updates, and maintenance.",
+      lastUpdatedLabel: "Last updated:",
+      overall: {
+        operational: "All Systems Operational",
+        partial: "Some Systems Degraded",
+        maintenance: "Under Maintenance",
+        down: "System Outage",
       },
-      {
-        name: "Carikan Properti",
-        status: "operational",
-        description: "Fitur tersedia dan menampilkan hasil statis sesuai preferensi pengguna.",
-        icon: <Cloud className="w-5 h-5" />,
+      badges: {
+        operational: "Normal",
+        partial: "Limited",
+        maintenance: "Maintenance",
+        offline: "Offline",
       },
-      {
-        name: "Promo Properti",
-        status: "offline",
-        description: "Belum aktif — akan diaktifkan setelah fase login dan integrasi API.",
-        icon: <Activity className="w-5 h-5" />,
-      },
-    ],
+      components: [
+        {
+          name: "Main Website",
+          status: "operational",
+          description: "Homepage, navigation, and basic information are working normally.",
+          icon: <Wifi className="w-5 h-5" />,
+        },
+        {
+          name: "API Server",
+          status: "maintenance",
+          description: "Currently under configuration and testing for login & dynamic data.",
+          icon: <Server className="w-5 h-5" />,
+        },
+        {
+          name: "Database",
+          status: "partial",
+          description:
+            "Some data remain static. Backend integration scheduled for next release.",
+          icon: <Database className="w-5 h-5" />,
+        },
+        {
+          name: "Find Property",
+          status: "operational",
+          description: "Feature available and shows static results based on user preferences.",
+          icon: <Cloud className="w-5 h-5" />,
+        },
+        {
+          name: "Property Promo",
+          status: "offline",
+          description: "Inactive — will be available after login and API integration phase.",
+          icon: <Activity className="w-5 h-5" />,
+        },
+      ],
+    },
   };
+
+  const text = data[lang];
 
   const getStatusBadge = (status) => {
     const base =
       "px-2.5 py-0.5 rounded-full text-[12px] font-medium flex items-center gap-1 w-fit";
+    const label = text.badges[status] || status;
     switch (status) {
       case "operational":
         return (
           <span className={`${base} bg-green-500/10 text-green-400`}>
-            <CheckCircle2 className="w-3.5 h-3.5" /> Normal
+            <CheckCircle2 className="w-3.5 h-3.5" /> {label}
           </span>
         );
       case "partial":
         return (
           <span className={`${base} bg-yellow-500/10 text-yellow-400`}>
-            <AlertTriangle className="w-3.5 h-3.5" /> Terbatas
+            <AlertTriangle className="w-3.5 h-3.5" /> {label}
           </span>
         );
       case "maintenance":
         return (
           <span className={`${base} bg-blue-500/10 text-blue-400`}>
-            <Clock className="w-3.5 h-3.5" /> Maintenance
+            <Clock className="w-3.5 h-3.5" /> {label}
           </span>
         );
       case "offline":
         return (
           <span className={`${base} bg-red-500/10 text-red-400`}>
-            <XCircle className="w-3.5 h-3.5" /> Offline
+            <XCircle className="w-3.5 h-3.5" /> {label}
           </span>
         );
       default:
@@ -139,7 +221,7 @@ export default function StatusPage() {
                 : "text-[#00a48f]"
             }`}
           >
-            Status Sistem
+            {text.title}
           </motion.h1>
 
           <motion.p
@@ -150,7 +232,7 @@ export default function StatusPage() {
               isDark ? "text-gray-300" : "text-gray-600"
             }`}
           >
-            Laporan real-time kondisi layanan Namura Property, pembaruan sistem, dan pemeliharaan.
+            {text.subtitle}
           </motion.p>
 
           {/* Status Keseluruhan */}
@@ -162,26 +244,16 @@ export default function StatusPage() {
               isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-gray-50"
             }`}
           >
-            <Activity className={`w-5 h-5 ${getOverallColor(systemStatus.overall)}`} />
-            <span
-              className={`font-semibold ${getOverallColor(systemStatus.overall)} text-lg`}
-            >
-              {systemStatus.overall === "operational"
-                ? "Semua Sistem Berjalan Normal"
-                : systemStatus.overall === "partial"
-                ? "Beberapa Sistem Terganggu"
-                : systemStatus.overall === "maintenance"
-                ? "Sedang Maintenance"
-                : "Gangguan Sistem"}
+            <Activity className={`w-5 h-5 ${getOverallColor("operational")}`} />
+            <span className={`font-semibold ${getOverallColor("operational")} text-lg`}>
+              {text.overall.operational}
             </span>
           </motion.div>
 
           <p
-            className={`mt-3 text-sm ${
-              isDark ? "text-gray-400" : "text-gray-500"
-            }`}
+            className={`mt-3 text-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}
           >
-            Pembaruan terakhir: {systemStatus.lastUpdated}
+            {text.lastUpdatedLabel} 11 November 2025, 22:30 WIB
           </p>
         </div>
       </section>
@@ -189,7 +261,7 @@ export default function StatusPage() {
       {/* DETAIL STATUS */}
       <section className="max-w-5xl mx-auto px-6 md:px-8 mt-16">
         <div className="grid md:grid-cols-2 gap-6">
-          {systemStatus.components.map((comp, i) => (
+          {text.components.map((comp, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 10 }}
@@ -205,21 +277,13 @@ export default function StatusPage() {
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="text-[#00ccb0]">{comp.icon}</div>
-                  <h3
-                    className={`font-semibold ${
-                      isDark ? "text-white" : "text-gray-900"
-                    }`}
-                  >
+                  <h3 className={`font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>
                     {comp.name}
                   </h3>
                 </div>
                 {getStatusBadge(comp.status)}
               </div>
-              <p
-                className={`text-sm leading-relaxed ${
-                  isDark ? "text-gray-300" : "text-gray-700"
-                }`}
-              >
+              <p className={`text-sm leading-relaxed ${isDark ? "text-gray-300" : "text-gray-700"}`}>
                 {comp.description}
               </p>
             </motion.div>
