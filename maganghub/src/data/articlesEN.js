@@ -24,7 +24,7 @@ Over 60% of new projects in Greater Jakarta have adopted green concepts — a bi
     category: "Finance",
     date: "Nov 8, 2025",
     read: "4 min read",
-    image: "/news/kpr-digital.png",
+    image: "/kpr.png",
     content: `
 Banks are embracing digital transformation, including in housing loans.
 With digital mortgage systems, you can now apply for home loans online with transparency and ease.

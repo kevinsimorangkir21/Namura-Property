@@ -1,0 +1,31 @@
+{
+  "name": "Namura Property",
+  "short_name": "Namura",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f15",
+  "theme_color": "#00ccb0",
+  "description": "Platform properti digital terpercaya di Indonesia.",
+  "icons": [
+    {
+      "src": "/NP TP S.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/NP TP S.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/NP TP S.png",
+      "type": "image/png",
+      "sizes": "180x180"
+    },
+    {
+      "src": "/NP TP S.ico",
+      "type": "image/x-icon",
+      "sizes": "48x48"
+    }
+  ]
+}

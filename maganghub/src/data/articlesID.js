@@ -24,7 +24,7 @@ Kini, lebih dari 60% proyek baru di Jabodetabek mulai mengadopsi konsep hijau â€
     category: "Finance",
     date: "8 Nov 2025",
     read: "4 menit baca",
-    image: "/news/kpr-digital.png",
+    image: "/kpr.png",
     content: `
 Perbankan kini semakin terbuka terhadap transformasi digital, termasuk dalam layanan Kredit Pemilikan Rumah (KPR).
 Dengan hadirnya sistem KPR digital, pengajuan rumah kini bisa dilakukan dari rumah.

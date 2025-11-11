@@ -84,7 +84,7 @@ export default function Contact() {
           title={lang === "id" ? "Email Resmi" : "Official Email"}
           isDark={isDark}
         >
-          info@namuraproperty.com
+          namurapropertyy@gmail.com
         </Card>
 
         <Card
@@ -92,7 +92,7 @@ export default function Contact() {
           title={lang === "id" ? "Tim Support" : "Support Team"}
           isDark={isDark}
         >
-          +62 812-3456-7890
+          +62 822-8251-2619
         </Card>
 
         <Card
@@ -124,8 +124,8 @@ export default function Contact() {
             isDark ? "text-gray-400" : "text-gray-600"
           }`}
         >
-          Jl. Zainal Abidin Pagar Alam No. XX, Bandar Lampung<br />
-          Lampung – Indonesia
+          Jl. Bunga Merak No. 03 Perumnas Way Kandis<br />
+          Bandar Lampung – Indonesia
         </p>
       </section>
 

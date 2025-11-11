@@ -55,7 +55,7 @@ export default function ArtikelPage() {
           category: "Insight",
           date: "10 Nov 2025",
           read: "5 menit baca",
-          image: "/news/eco-house.png",
+          image: "/tren.png",
           excerpt:
             "Properti ramah lingkungan kini menjadi fokus utama banyak developer di Indonesia. Pembangunan dengan prinsip sustainability mulai mendominasi proyek perumahan baru.",
         },
@@ -65,7 +65,7 @@ export default function ArtikelPage() {
           category: "Finance",
           date: "8 Nov 2025",
           read: "4 menit baca",
-          image: "/news/kpr-digital.png",
+          image: "/kpr.png",
           excerpt:
             "Bank mulai meluncurkan fitur pengajuan KPR online dengan proses cepat dan transparan. Pelajari cara memanfaatkannya untuk mendapatkan hunian impianmu.",
         },
@@ -75,7 +75,7 @@ export default function ArtikelPage() {
           category: "Market Update",
           date: "6 Nov 2025",
           read: "6 menit baca",
-          image: "/news/tod-growth.png",
+          image: "/TOD.png",
           excerpt:
             "Kawasan yang terintegrasi transportasi publik terus mengalami peningkatan minat investor dan pembeli rumah pertama.",
         },
@@ -95,7 +95,7 @@ export default function ArtikelPage() {
           category: "Market Update",
           date: "2 Nov 2025",
           read: "4 menit baca",
-          image: "/news/market-stable.png",
+          image: "/pasar.png",
           excerpt:
             "Pasar properti nasional menunjukkan stabilitas, namun investor kini lebih berhati-hati dalam memilih sektor dengan potensi jangka panjang.",
         },
@@ -105,7 +105,7 @@ export default function ArtikelPage() {
           category: "Tech",
           date: "30 Okt 2025",
           read: "5 menit baca",
-          image: "/news/modular.png",
+          image: "/inovasi.png",
           excerpt:
             "Konsep rumah modular semakin diminati karena kecepatan pembangunan dan fleksibilitas desain yang tinggi.",
         },
@@ -124,7 +124,7 @@ export default function ArtikelPage() {
           category: "Insight",
           date: "Nov 10, 2025",
           read: "5 min read",
-          image: "/news/eco-house.png",
+          image: "/tren.png",
           excerpt:
             "Eco-friendly property development is becoming a main focus for many developers in Indonesia, emphasizing sustainability in new housing projects.",
         },
@@ -134,7 +134,7 @@ export default function ArtikelPage() {
           category: "Finance",
           date: "Nov 8, 2025",
           read: "4 min read",
-          image: "/news/kpr-digital.png",
+          image: "/kpr.png",
           excerpt:
             "Banks are introducing online mortgage applications with faster and more transparent processes. Learn how to use them for your dream home.",
         },
@@ -144,7 +144,7 @@ export default function ArtikelPage() {
           category: "Market Update",
           date: "Nov 6, 2025",
           read: "6 min read",
-          image: "/news/tod-growth.png",
+          image: "/TOD.png",
           excerpt:
             "Transit-oriented areas continue to attract both investors and first-time homebuyers thanks to improved accessibility.",
         },
@@ -154,7 +154,7 @@ export default function ArtikelPage() {
           category: "Guides",
           date: "Nov 4, 2025",
           read: "3 min read",
-          image: "/news/sell-fast.png",
+          image: "/pasar.png",
           excerpt:
             "Simply listing your house isn’t enough. Use digital marketing, good photography, and market analysis to sell faster.",
         },
@@ -174,7 +174,7 @@ export default function ArtikelPage() {
           category: "Tech",
           date: "Oct 30, 2025",
           read: "5 min read",
-          image: "/news/modular.png",
+          image: "/inovasi.png",
           excerpt:
             "Modular homes are gaining popularity for their speed of construction and flexible design.",
         },

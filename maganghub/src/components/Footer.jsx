@@ -35,7 +35,7 @@ export default function Footer() {
   const t = {
     id: {
       desc: "Portal properti modern untuk memudahkan kamu menemukan hunian terbaik masa kini.",
-      address: "Jakarta Selatan, Indonesia",
+      address: "JL Bunga Merak No. 03 Perumnas Way Kandis, Bandar Lampung, Indonesia",
       nav: ["Beranda", "Rekomendasi", "Artikel", "Cari Agen", "Kontak"],
       navTitle: "Navigasi",
       socialTitle: "Terhubung",
@@ -69,7 +69,7 @@ export default function Footer() {
     },
   }[lang];
 
-  const version = "v1.0.3";
+  const version = "v0.0.1";
 
   return (
     <footer
@@ -107,7 +107,7 @@ export default function Footer() {
                   : "text-[#00a48f] hover:text-[#008579]"
               }`}
             >
-              <i className="bi bi-journal-text"></i> {t.changelog} {version}
+              <i className="bi bi-journal-text"></i> {t.changelog}
             </a>
 
             <span className="text-gray-500">•</span>
@@ -157,10 +157,7 @@ export default function Footer() {
           <p className="text-sm mb-4">{t.socialDesc}</p>
           <div className="flex gap-4">
             {[
-              { icon: "twitter", url: "https://twitter.com" },
-              { icon: "linkedin", url: "https://linkedin.com" },
-              { icon: "instagram", url: "https://instagram.com" },
-              { icon: "youtube", url: "https://youtube.com" },
+              { icon: "instagram", url: "https://www.instagram.com/namurapropertyy/" },
             ].map(({ icon, url }) => (
               <a
                 key={icon}
