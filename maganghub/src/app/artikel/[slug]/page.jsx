@@ -15,74 +15,19 @@ import {
   MessageCircle,
 } from "lucide-react";
 
-const articles = [
-  {
-    id: 1,
-    slug: "tren-properti-hijau-2025",
-    title:
-      "Tren Properti Hijau: Investasi Ramah Lingkungan yang Meningkat di 2025",
-    category: "Insight",
-    date: "10 Nov 2025",
-    read: "5 min read",
-    image: "/news/eco-house.png",
-    content: `
-Properti ramah lingkungan kini menjadi fokus utama banyak developer di Indonesia.
-Kesadaran masyarakat terhadap pentingnya efisiensi energi dan konsep *green building* meningkat pesat.
+// 🗂️ Import data bilingual
+import { articlesID } from "@/data/articlesID";
+import { articlesEN } from "@/data/articlesEN";
+import { getLocalizedText } from "@/utils/getLocalizedText";
 
-**Manfaat Investasi Properti Hijau**
-- Nilai jual lebih stabil
-- Tagihan energi lebih hemat
-- Ramah lingkungan & berkelanjutan
-
-Kini, lebih dari 60% proyek baru di Jabodetabek mulai mengadopsi konsep hijau — transformasi besar industri properti nasional.
-`,
-  },
-  {
-    id: 2,
-    slug: "kpr-digital-teknologi-pembiayaan-rumah",
-    title:
-      "KPR Digital: Bagaimana Teknologi Mempermudah Pembiayaan Rumah",
-    category: "Finance",
-    date: "8 Nov 2025",
-    read: "4 min read",
-    image: "/news/kpr-digital.png",
-    content: `
-Perbankan kini semakin terbuka terhadap transformasi digital, termasuk dalam layanan Kredit Pemilikan Rumah (KPR).
-Dengan hadirnya sistem KPR digital, pengajuan rumah kini bisa dilakukan dari rumah.
-
-**Keunggulan KPR Digital:**
-1. Proses cepat dan transparan.
-2. Simulasi bunga real-time.
-3. Verifikasi dokumen online.
-`,
-  },
-  {
-    id: 3,
-    slug: "nilai-properti-tod-naik-2025",
-    title: "Nilai Properti Kawasan TOD Naik hingga 12% di Semester Ini",
-    category: "Insight",
-    date: "6 Nov 2025",
-    read: "6 min read",
-    image: "/news/tod-growth.png",
-    content: `
-Kawasan TOD (Transit Oriented Development) menjadi magnet baru bagi investor properti.
-Dekat stasiun LRT dan MRT, kawasan ini mencatat kenaikan harga lahan 12% hanya dalam enam bulan terakhir.
-`,
-  },
-];
 
 export default function ArtikelDetail({ params }) {
   const slug = decodeURIComponent(params.slug);
-  const index = articles.findIndex((a) => a.slug === slug);
-  const article = articles[index];
-  if (!article) return notFound();
-
-  const prevArticle = articles[index - 1];
-  const nextArticle = articles[index + 1];
-
   const [isDark, setIsDark] = useState(false);
+  const [lang, setLang] = useState("id");
   const [copied, setCopied] = useState(false);
 
+  // 🌙 Deteksi tema aktif
   useEffect(() => {
     const dark = document.documentElement.classList.contains("dark");
     setIsDark(dark);
@@ -96,6 +41,27 @@ export default function ArtikelDetail({ params }) {
     return () => observer.disconnect();
   }, []);
 
+  // 🌐 Deteksi bahasa aktif
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+    window.addEventListener("languageChange", loadLang);
+    return () => window.removeEventListener("languageChange", loadLang);
+  }, []);
+
+  // 🔍 Cari di semua artikel agar slug beda bahasa tetap bisa ditemukan
+const allArticles = [...articlesID, ...articlesEN];
+const articleIndex = allArticles.findIndex((a) => a.slug === slug);
+const article = allArticles[articleIndex];
+
+if (!article) return notFound();
+
+// Tentukan prev/next dari data gabungan
+const prevArticle = allArticles[articleIndex - 1];
+const nextArticle = allArticles[articleIndex + 1];
+
+
+  // 🔗 Share actions
   const handleCopy = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
@@ -106,6 +72,7 @@ export default function ArtikelDetail({ params }) {
     const text = `${article.title} — ${window.location.href}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
+
   const shareTwitter = () => {
     const text = `${article.title} — ${window.location.href}`;
     window.open(
@@ -113,6 +80,28 @@ export default function ArtikelDetail({ params }) {
       "_blank"
     );
   };
+
+  // 🌎 Teks bilingual
+  const t = {
+    id: {
+      back: "Kembali ke Artikel",
+      shareWA: "Bagikan via WhatsApp",
+      shareTW: "Bagikan di Twitter",
+      copy: "Salin Tautan",
+      copied: "Disalin!",
+      prev: "Artikel Sebelumnya",
+      next: "Artikel Selanjutnya",
+    },
+    en: {
+      back: "Back to Articles",
+      shareWA: "Share via WhatsApp",
+      shareTW: "Share on Twitter",
+      copy: "Copy Link",
+      copied: "Copied!",
+      prev: "Previous Article",
+      next: "Next Article",
+    },
+  }[lang];
 
   return (
     <main
@@ -130,7 +119,7 @@ export default function ArtikelDetail({ params }) {
               : "text-[#00a48f] hover:text-[#008b78]"
           }`}
         >
-          <ArrowLeft className="w-4 h-4" /> Kembali ke Artikel
+          <ArrowLeft className="w-4 h-4" /> {t.back}
         </Link>
 
         {/* HEADER */}
@@ -203,7 +192,7 @@ export default function ArtikelDetail({ params }) {
           ))}
         </motion.article>
 
-        {/* SHARE */}
+        {/* SHARE BUTTONS */}
         <div
           className={`mt-10 flex flex-wrap gap-3 border-t pt-6 ${
             isDark ? "border-white/10" : "border-gray-200"
@@ -217,8 +206,9 @@ export default function ArtikelDetail({ params }) {
                 : "bg-[#00ccb0]/10 border-[#00a48f] text-[#009a86] hover:bg-[#00ccb0]/15"
             }`}
           >
-            <MessageCircle className="w-4 h-4" /> WhatsApp
+            <MessageCircle className="w-4 h-4" /> {t.shareWA}
           </button>
+
           <button
             onClick={shareTwitter}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition border ${
@@ -227,8 +217,9 @@ export default function ArtikelDetail({ params }) {
                 : "bg-gray-100 border-gray-300 hover:bg-gray-200 text-gray-800"
             }`}
           >
-            <Twitter className="w-4 h-4 text-sky-400" /> Twitter
+            <Twitter className="w-4 h-4 text-sky-400" /> {t.shareTW}
           </button>
+
           <button
             onClick={handleCopy}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition border ${
@@ -237,11 +228,11 @@ export default function ArtikelDetail({ params }) {
                 : "bg-gray-100 border-gray-300 hover:bg-gray-200"
             }`}
           >
-            <Copy className="w-4 h-4" /> {copied ? "Disalin!" : "Salin Tautan"}
+            <Copy className="w-4 h-4" /> {copied ? t.copied : t.copy}
           </button>
         </div>
 
-        {/* NEXT / PREV */}
+        {/* NAVIGATION (Prev / Next) */}
         <div
           className={`mt-16 flex justify-between border-t pt-8 ${
             isDark ? "border-white/10" : "border-gray-200"
@@ -256,7 +247,7 @@ export default function ArtikelDetail({ params }) {
                   : "text-gray-700 hover:text-[#00a48f]"
               }`}
             >
-              <ArrowLeft className="w-4 h-4" /> {prevArticle.title}
+              <ArrowLeft className="w-4 h-4" /> {t.prev}
             </Link>
           ) : (
             <div />
@@ -271,7 +262,7 @@ export default function ArtikelDetail({ params }) {
                   : "text-gray-700 hover:text-[#00a48f]"
               }`}
             >
-              {nextArticle.title} <ArrowRight className="w-4 h-4" />
+              {t.next} <ArrowRight className="w-4 h-4" />
             </Link>
           ) : (
             <div />
@@ -279,7 +270,7 @@ export default function ArtikelDetail({ params }) {
         </div>
       </section>
 
-      {/* Ambient light */}
+      {/* Ambient Glow */}
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: isDark ? 0.12 : 0.08 }}

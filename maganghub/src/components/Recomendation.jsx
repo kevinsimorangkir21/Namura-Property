@@ -4,13 +4,8 @@ import { motion } from "framer-motion";
 import { BedDouble, Bath, Ruler, ChevronLeft, ChevronRight } from "lucide-react";
 import { propertiesData } from "@/data/propertiesData";
 import Link from "next/link";
-
-const slugify = (s) =>
-  (s || "")
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
+import { slugify } from "@/utils/slugify";
+import { getLocalizedText } from "@/utils/getLocalizedText";
 
 const shuffle = (arr) => {
   const a = [...arr];
@@ -26,6 +21,7 @@ const normalize = (v) => (!v || v === "-" || v === "" ? "—" : v);
 export default function Recommendation() {
   const [items, setItems] = useState([]);
   const [isDark, setIsDark] = useState(false);
+  const [lang, setLang] = useState("id");
   const ref = useRef(null);
 
   useEffect(() => {
@@ -35,7 +31,7 @@ export default function Recommendation() {
     setItems(final);
   }, []);
 
-  // detect mode
+  // 🌙 Detect theme
   useEffect(() => {
     const dark = document.documentElement.classList.contains("dark");
     setIsDark(dark);
@@ -44,6 +40,14 @@ export default function Recommendation() {
     });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
+  }, []);
+
+  // 🌐 Detect language
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+    window.addEventListener("languageChange", loadLang);
+    return () => window.removeEventListener("languageChange", loadLang);
   }, []);
 
   const loading = useMemo(() => items.length === 0, [items]);
@@ -65,14 +69,18 @@ export default function Recommendation() {
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
-              Rekomendasi Sesuai Pencarianmu
+              {lang === "id"
+                ? "Rekomendasi Sesuai Pencarianmu"
+                : "Recommendations Based on Your Search"}
             </h2>
             <p
               className={`text-sm md:text-base mt-1 max-w-lg ${
                 isDark ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              Pilihan properti yang dikurasi berdasarkan preferensi minat pencarianmu dan tren area terkait.
+              {lang === "id"
+                ? "Pilihan properti yang dikurasi berdasarkan preferensi pencarianmu dan tren area terkait."
+                : "Curated property picks based on your search preferences and nearby area trends."}
             </p>
           </div>
 
@@ -86,7 +94,7 @@ export default function Recommendation() {
                     : "border-gray-300 text-gray-700 hover:bg-gray-100 bg-white"
                 }`}
               >
-                Lihat Selengkapnya
+                {lang === "id" ? "Lihat Selengkapnya" : "View All"}
               </button>
             </Link>
 
@@ -153,7 +161,7 @@ export default function Recommendation() {
                     isDark ? "text-gray-200" : "text-gray-800"
                   }`}
                 >
-                  {p?.title ?? "Loading…"}
+                  {getLocalizedText(p?.title, lang) || "Loading…"}
                 </div>
 
                 <div
@@ -161,7 +169,7 @@ export default function Recommendation() {
                     isDark ? "text-gray-400" : "text-gray-500"
                   }`}
                 >
-                  {p?.address ?? p?.location ?? "—"}
+                  {getLocalizedText(p?.address ?? p?.location, lang) || "—"}
                 </div>
 
                 {/* Meta */}
@@ -183,9 +191,11 @@ export default function Recommendation() {
 
                 {/* Footer */}
                 {p?.id ? (
-                  <Link href={`/listing/${p.id}-${slugify(p.title)}`}>
+                  <Link
+                    href={`/listing/${p.id}-${slugify(getLocalizedText(p?.title, lang))}`}
+                  >
                     <div className="mt-3 text-[#00ccb0] text-[12px] hover:underline">
-                      Lihat Detail →
+                      {lang === "id" ? "Lihat Detail →" : "View Details →"}
                     </div>
                   </Link>
                 ) : (

@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { slugify } from "@/utils/slugify";
+
 import { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
@@ -15,19 +17,15 @@ import {
   Ruler,
 } from "lucide-react";
 import { propertiesData } from "@/data/propertiesData";
+import { getLocalizedText } from "@/utils/getLocalizedText";
 
-const slugify = (s) =>
-  (s || "")
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
+
 
 const IMG_H_BY_TYPE = (type) => {
   const t = (type || "").toLowerCase();
   if (t.includes("apart")) return 240;
   if (t.includes("town")) return 220;
-  if (t.includes("rumah")) return 220;
+  if (t.includes("rumah") || t.includes("house")) return 220;
   return 190;
 };
 
@@ -41,12 +39,13 @@ const normalizeLT = (lt) => {
 export default function ListingProperti() {
   const [isDark, setIsDark] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("Semua Lokasi");
-  const [selectedType, setSelectedType] = useState("Semua Tipe");
+  const [selectedLocation, setSelectedLocation] = useState("All Locations");
+  const [selectedType, setSelectedType] = useState("All Types");
   const [currentPage, setCurrentPage] = useState(1);
+  const [lang, setLang] = useState("id");
   const itemsPerPage = 9;
 
-  // detect theme
+  // 🌙 Detect theme
   useEffect(() => {
     const dark = document.documentElement.classList.contains("dark");
     setIsDark(dark);
@@ -57,27 +56,80 @@ export default function ListingProperti() {
     return () => observer.disconnect();
   }, []);
 
+  // 🌐 Detect language
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+    window.addEventListener("languageChange", loadLang);
+    return () => window.removeEventListener("languageChange", loadLang);
+  }, []);
+
+  // 🌍 Translate labels
+  const t = {
+    id: {
+      title: "Listing Properti",
+      searchPlaceholder: "Cari judul, alamat, atau lokasi...",
+      reset: "Reset",
+      noResult: "Tidak ada hasil yang cocok",
+      suggestion: "Coba ubah kata kunci atau reset filter.",
+      resetFilter: "Reset Filter",
+      prev: "Sebelumnya",
+      next: "Berikutnya",
+      page: "Halaman",
+      of: "dari",
+      allLoc: "Semua Lokasi",
+      allType: "Semua Tipe",
+      viewDetail: "Lihat Detail",
+    },
+    en: {
+      title: "Property Listings",
+      searchPlaceholder: "Search title, address, or location...",
+      reset: "Reset",
+      noResult: "No matching results",
+      suggestion: "Try changing keywords or reset filters.",
+      resetFilter: "Reset Filter",
+      prev: "Previous",
+      next: "Next",
+      page: "Page",
+      of: "of",
+      allLoc: "All Locations",
+      allType: "All Types",
+      viewDetail: "View Details",
+    },
+  }[lang];
+
+  // 🏙️ Locations & Types (based on lang)
   const locations = useMemo(
-    () => ["Semua Lokasi", ...Array.from(new Set(propertiesData.map((p) => p.location)))],
-    []
-  );
-  const types = useMemo(
-    () => ["Semua Tipe", ...Array.from(new Set(propertiesData.map((p) => p.type)))],
-    []
+    () => [t.allLoc, ...Array.from(new Set(propertiesData.map((p) => p.location)))],
+    [t.allLoc]
   );
 
+  const types = useMemo(
+    () => [t.allType, ...Array.from(new Set(propertiesData.map((p) => (typeof p.type === "object" ? p.type[lang] : p.type))))],
+    [lang, t.allType]
+  );
+
+  // 🔎 Filtering logic (fixed bilingual)
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
+
     return propertiesData.filter((p) => {
+      const title = typeof p.title === "object" ? p.title[lang] : p.title;
+      const desc = typeof p.desc === "object" ? p.desc[lang] : p.desc;
+      const type = typeof p.type === "object" ? p.type[lang] : p.type;
+
       const matchTitle =
-        p.title.toLowerCase().includes(q) ||
-        p.location.toLowerCase().includes(q) ||
+        title?.toLowerCase().includes(q) ||
+        desc?.toLowerCase().includes(q) ||
+        p.location?.toLowerCase().includes(q) ||
         (p.address ?? "").toLowerCase().includes(q);
-      const matchLoc = selectedLocation === "Semua Lokasi" || p.location === selectedLocation;
-      const matchType = selectedType === "Semua Tipe" || p.type === selectedType;
+
+      const matchLoc = selectedLocation === t.allLoc || p.location === selectedLocation;
+      const matchType = selectedType === t.allType || type === selectedType;
+
       return matchTitle && matchLoc && matchType;
     });
-  }, [search, selectedLocation, selectedType]);
+  }, [search, selectedLocation, selectedType, lang, t.allLoc, t.allType]);
 
   useEffect(() => setCurrentPage(1), [search, selectedLocation, selectedType]);
 
@@ -90,8 +142,8 @@ export default function ListingProperti() {
 
   const resetFilter = () => {
     setSearch("");
-    setSelectedLocation("Semua Lokasi");
-    setSelectedType("Semua Tipe");
+    setSelectedLocation(t.allLoc);
+    setSelectedType(t.allType);
   };
 
   return (
@@ -105,20 +157,18 @@ export default function ListingProperti() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
           <div>
             <h1 className={`text-3xl md:text-4xl font-black ${isDark ? "text-white" : "text-gray-900"}`}>
-              Listing Properti
+              {t.title}
             </h1>
             <div className="mt-2 h-1 w-28 rounded-full bg-gradient-to-r from-[#03a893] to-[#00e0c8] opacity-70" />
           </div>
 
           <div className="relative w-full md:w-[420px]">
             <Search
-              className={`absolute left-3 top-3.5 w-5 h-5 ${
-                isDark ? "text-gray-400" : "text-gray-500"
-              }`}
+              className={`absolute left-3 top-3.5 w-5 h-5 ${isDark ? "text-gray-400" : "text-gray-500"}`}
             />
             <input
               type="text"
-              placeholder="Cari judul, alamat, atau lokasi..."
+              placeholder={t.searchPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={`w-full pl-10 pr-24 py-3 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-[#00ccb0] transition-all ${
@@ -136,7 +186,7 @@ export default function ListingProperti() {
                     : "bg-gray-100 hover:bg-gray-200 border-gray-300 text-gray-600"
                 }`}
               >
-                Clear
+                {t.reset}
               </button>
             )}
           </div>
@@ -176,7 +226,7 @@ export default function ListingProperti() {
             ))}
           </select>
 
-          {(search || selectedLocation !== "Semua Lokasi" || selectedType !== "Semua Tipe") && (
+          {(search || selectedLocation !== t.allLoc || selectedType !== t.allType) && (
             <button
               onClick={resetFilter}
               className={`px-4 py-3 rounded-xl border transition ${
@@ -185,7 +235,7 @@ export default function ListingProperti() {
                   : "bg-gray-100 border-gray-300 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              Reset
+              {t.reset}
             </button>
           )}
         </div>
@@ -194,22 +244,26 @@ export default function ListingProperti() {
         {currentItems.length === 0 ? (
           <div className="text-center py-20">
             <div className={`text-lg font-semibold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
-              Tidak ada hasil yang cocok
+              {t.noResult}
             </div>
             <p className={`text-sm mt-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-              Coba ubah kata kunci atau reset filter.
+              {t.suggestion}
             </p>
             <button
               onClick={resetFilter}
               className="mt-5 px-4 py-2 rounded-lg border border-[#00bba4] text-[#00ccb0] hover:bg-[#00ccb0]/10 transition text-sm font-semibold"
             >
-              Reset Filter
+              {t.resetFilter}
             </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {currentItems.map((p, i) => {
-              const imgH = IMG_H_BY_TYPE(p.type);
+              const title = typeof p.title === "object" ? p.title[lang] : p.title;
+              const desc = typeof p.desc === "object" ? p.desc[lang] : p.desc;
+              const type = typeof p.type === "object" ? p.type[lang] : p.type;
+              const imgH = IMG_H_BY_TYPE(type);
+
               return (
                 <motion.div
                   key={p.id}
@@ -229,7 +283,7 @@ export default function ListingProperti() {
                   )}
 
                   <div className="w-full overflow-hidden" style={{ height: imgH }}>
-                    <img src={p.img} alt={p.title} className="w-full h-full object-cover opacity-95" />
+                    <img src={p.img} alt={title} className="w-full h-full object-cover opacity-95" />
                   </div>
 
                   <div className="p-5">
@@ -245,7 +299,7 @@ export default function ListingProperti() {
                             : "bg-gray-100 border-gray-300 text-gray-700"
                         }`}
                       >
-                        <Home className="w-3.5 h-3.5" /> {p.type}
+                        <Home className="w-3.5 h-3.5" /> {type}
                       </span>
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-1 rounded-full border ${
@@ -263,38 +317,21 @@ export default function ListingProperti() {
                         isDark ? "text-gray-100" : "text-gray-800"
                       }`}
                     >
-                      {p.title}
+                      {title}
                     </h3>
                     <p
                       className={`text-[13px] mt-1 line-clamp-2 ${
                         isDark ? "text-gray-400" : "text-gray-600"
                       }`}
                     >
-                      {p.desc}
+                      {desc}
                     </p>
-
-                    {/* Meta */}
-                    <div
-                      className={`mt-3 text-[12px] flex items-center gap-4 ${
-                        isDark ? "text-gray-300/90" : "text-gray-600"
-                      }`}
-                    >
-                      <span className="inline-flex items-center gap-1.5">
-                        <BedDouble className="w-4 h-4" /> {toDash(p.details?.kamarTidur)}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5">
-                        <Bath className="w-4 h-4" /> {toDash(p.details?.kamarMandi)}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5">
-                        <Ruler className="w-4 h-4" /> {normalizeLT(p.details?.luasTanah)}
-                      </span>
-                    </div>
 
                     <div className="mt-4 flex items-center justify-between">
                       <span className="text-[#00ccb0] font-bold">{p.price}</span>
-                      <Link href={`/listing/${p.id}-${slugify(p.title)}`}>
+                      <Link href={`/listing/${p.id}-${slugify(title)}`}>
                         <button className="px-4 py-2 rounded-lg border border-[#00ccb0] text-[#00ccb0] hover:bg-[#00ccb0]/10 transition text-sm font-semibold inline-flex items-center gap-2">
-                          Lihat Detail <Building2 className="w-4 h-4" />
+                          {t.viewDetail} <Building2 className="w-4 h-4" />
                         </button>
                       </Link>
                     </div>
@@ -318,7 +355,7 @@ export default function ListingProperti() {
                     : "text-[#00ccb0] border-[#00ccb0] hover:bg-[#00ccb0]/10"
                 }`}
               >
-                <ArrowLeft className="w-4 h-4" /> Prev
+                <ArrowLeft className="w-4 h-4" /> {t.prev}
               </button>
 
               {[...Array(totalPages).keys()].map((p) => (
@@ -346,19 +383,19 @@ export default function ListingProperti() {
                     : "text-[#00ccb0] border-[#00ccb0] hover:bg-[#00ccb0]/10"
                 }`}
               >
-                Next <ArrowRight className="w-4 h-4" />
+                {t.next} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
 
             <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-              Halaman <span className="font-semibold">{currentPage}</span> dari{" "}
+              {t.page} <span className="font-semibold">{currentPage}</span> {t.of}{" "}
               <span className="font-semibold">{totalPages}</span>
             </p>
           </div>
         )}
       </div>
 
-      {/* Ambient */}
+      {/* Ambient glow */}
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: isDark ? 0.12 : 0.08 }}

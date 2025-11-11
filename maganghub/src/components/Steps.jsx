@@ -3,42 +3,76 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function Steps() {
-  const steps = [
-    {
-      num: 1,
-      title: "Temukan Unit",
-      desc: "Cari properti yang sesuai kebutuhanmu dengan filter kategori, lokasi, dan harga.",
-    },
-    {
-      num: 2,
-      title: "Hubungi Tim Ahli",
-      desc: "Konsultasi, klarifikasi kebutuhan, negosiasi, hingga jadwal site visit dipandu langsung.",
-    },
-    {
-      num: 3,
-      title: "Deal & Proses KPR",
-      desc: "Mulai proses pembelian atau pengajuan KPR dengan lebih terarah & minim ribet.",
-    },
-  ];
-
   const [isDark, setIsDark] = useState(false);
+  const [lang, setLang] = useState("id");
 
-  // 👀 Deteksi mode aktif dari <html class="dark">
+  // 🌙 Deteksi mode aktif (dark/light)
   useEffect(() => {
     const dark = document.documentElement.classList.contains("dark");
     setIsDark(dark);
-
     const observer = new MutationObserver(() => {
       setIsDark(document.documentElement.classList.contains("dark"));
     });
-
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
-
     return () => observer.disconnect();
   }, []);
+
+  // 🌐 Deteksi bahasa aktif
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+    window.addEventListener("languageChange", loadLang);
+    return () => window.removeEventListener("languageChange", loadLang);
+  }, []);
+
+  // ✍️ Data langkah & teks bilingual
+  const content = {
+    id: {
+      title: "Cara Memulai Bersama Namura Property",
+      desc: "Panduan ringkas dari mulai menemukan properti, konsultasi, sampai transaksimu selesai.",
+      steps: [
+        {
+          num: 1,
+          title: "Temukan Unit",
+          desc: "Cari properti yang sesuai kebutuhanmu dengan filter kategori, lokasi, dan harga.",
+        },
+        {
+          num: 2,
+          title: "Hubungi Tim Ahli",
+          desc: "Konsultasi, klarifikasi kebutuhan, negosiasi, hingga jadwal site visit dipandu langsung.",
+        },
+        {
+          num: 3,
+          title: "Deal & Proses KPR",
+          desc: "Mulai proses pembelian atau pengajuan KPR dengan lebih terarah & minim ribet.",
+        },
+      ],
+    },
+    en: {
+      title: "How to Get Started with Namura Property",
+      desc: "A quick guide from finding the right property to consultation and completing your transaction.",
+      steps: [
+        {
+          num: 1,
+          title: "Find a Property",
+          desc: "Search for properties that match your needs by category, location, and price.",
+        },
+        {
+          num: 2,
+          title: "Contact Our Experts",
+          desc: "Consult, clarify your needs, negotiate, and schedule a site visit with our team’s help.",
+        },
+        {
+          num: 3,
+          title: "Deal & Mortgage Process",
+          desc: "Start the buying or mortgage process in a more guided and hassle-free way.",
+        },
+      ],
+    },
+  }[lang];
 
   return (
     <section
@@ -52,7 +86,7 @@ export default function Steps() {
             isDark ? "text-white" : "text-gray-900"
           }`}
         >
-          Cara Memulai Bersama Namura Property
+          {content.title}
         </h2>
 
         <p
@@ -60,12 +94,12 @@ export default function Steps() {
             isDark ? "text-gray-400" : "text-gray-600"
           }`}
         >
-          Panduan ringkas dari mulai menemukan properti, konsultasi, sampai
-          transaksimu selesai.
+          {content.desc}
         </p>
 
+        {/* === Steps === */}
         <div className="grid md:grid-cols-3 gap-10">
-          {steps.map((s, i) => (
+          {content.steps.map((s, i) => (
             <motion.div
               key={s.num}
               initial={{ opacity: 0, y: 30 }}
@@ -78,7 +112,7 @@ export default function Steps() {
                   : "bg-gray-50 border border-gray-200 hover:border-[#00ccb0]/40 hover:shadow-[0_8px_25px_-10px_rgba(0,200,180,0.25)]"
               }`}
             >
-              {/* Number Circle */}
+              {/* Nomor */}
               <div
                 className={`absolute -top-7 left-6 w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-extrabold shadow-lg ${
                   isDark
@@ -109,7 +143,7 @@ export default function Steps() {
         </div>
       </div>
 
-      {/* Ambient Background Accent */}
+      {/* === Ambient Background === */}
       {isDark ? (
         <motion.div
           initial={{ scale: 0, opacity: 0 }}

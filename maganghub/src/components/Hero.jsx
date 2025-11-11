@@ -2,21 +2,11 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const quickActions = [
-  { label: "Carikan Properti", icon: "/HouseSearch.svg" },
-  { label: "Iklankan Properti", icon: "/Ads.svg" },
-  { label: "Cari Agen", icon: "/Agent.svg" },
-  { label: "Promo Properti", icon: "/Promo.svg" },
-  { label: "Kalkulator KPR", icon: "/KalkulatorKPR.svg" },
-  { label: "Pindah KPR (Take Over)", icon: "/PindahKPR.svg" },
-  { label: "Tanya Forum (Teras123)", icon: "/TanyaForum.svg" },
-  { label: "Lainnya", icon: "/Mores.svg" },
-];
-
 export default function Hero() {
   const [isDark, setIsDark] = useState(false);
+  const [lang, setLang] = useState("id");
 
-  // cek mode aktif (mengikuti class html)
+  // === THEME DETECTION ===
   useEffect(() => {
     const dark = document.documentElement.classList.contains("dark");
     setIsDark(dark);
@@ -31,6 +21,51 @@ export default function Hero() {
     return () => observer.disconnect();
   }, []);
 
+  // === LANGUAGE DETECTION (REALTIME) ===
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+
+    // 🔥 dengarkan event dari Navbar
+    window.addEventListener("languageChange", loadLang);
+
+    return () => window.removeEventListener("languageChange", loadLang);
+  }, []);
+
+  // === TRANSLATIONS ===
+  const quickActions =
+    lang === "id"
+      ? [
+          { label: "Carikan Properti", icon: "/HouseSearch.svg" },
+          { label: "Iklankan Properti", icon: "/Ads.svg" },
+          { label: "Cari Agen", icon: "/Agent.svg" },
+          { label: "Promo Properti", icon: "/Promo.svg" },
+          { label: "Kalkulator KPR", icon: "/KalkulatorKPR.svg" },
+          { label: "Pindah KPR (Take Over)", icon: "/PindahKPR.svg" },
+          { label: "Tanya Forum (Teras123)", icon: "/TanyaForum.svg" },
+          { label: "Lainnya", icon: "/Mores.svg" },
+        ]
+      : [
+          { label: "Find Property", icon: "/HouseSearch.svg" },
+          { label: "Advertise Property", icon: "/Ads.svg" },
+          { label: "Find Agent", icon: "/Agent.svg" },
+          { label: "Property Deals", icon: "/Promo.svg" },
+          { label: "Mortgage Calculator", icon: "/KalkulatorKPR.svg" },
+          { label: "KPR Take Over", icon: "/PindahKPR.svg" },
+          { label: "Ask in Forum", icon: "/TanyaForum.svg" },
+          { label: "More", icon: "/Mores.svg" },
+        ];
+
+  // === BANNER SELECTION ===
+  const bannerSrc =
+    lang === "id"
+      ? isDark
+        ? "/BannerID.png"
+        : "/BannerID.png"
+      : isDark
+      ? "/BannerENG.png"
+      : "/BannerENG.png";
+
   return (
     <section
       className={`relative overflow-hidden transition-colors duration-500 ${
@@ -38,7 +73,7 @@ export default function Hero() {
       } pt-10 md:pt-10 pb-10`}
     >
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* banner FIRST */}
+        {/* === BANNER === */}
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -50,13 +85,13 @@ export default function Hero() {
           }`}
         >
           <img
-            src={isDark ? "/BannerID.png" : "/BannerID.png"}
-            alt="Banner ID"
+            src={bannerSrc}
+            alt={lang === "id" ? "Banner ID" : "Banner EN"}
             className="w-full h-auto object-cover"
           />
         </motion.div>
 
-        {/* quick action */}
+        {/* === QUICK ACTIONS === */}
         <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 mb-6">
           {quickActions.map((action, i) => (
             <motion.div
@@ -76,7 +111,6 @@ export default function Hero() {
                   isDark ? "opacity-90" : "opacity-80"
                 }`}
               />
-
               <span
                 className={`text-[10px] md:text-[11px] font-medium leading-tight text-center ${
                   isDark ? "text-gray-200" : "text-gray-700"
@@ -89,7 +123,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ambient glow / light accent */}
+      {/* === AMBIENT EFFECT === */}
       {isDark ? (
         <motion.div
           initial={{ scale: 0, opacity: 0 }}

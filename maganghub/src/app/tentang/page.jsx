@@ -19,19 +19,25 @@ import { useEffect, useState } from "react";
 
 export default function Tentang() {
   const [isDark, setIsDark] = useState(false);
+  const [lang, setLang] = useState("id");
 
-  // 🌙 Deteksi mode aktif
+  // 🌙 Dark mode detector
   useEffect(() => {
     const dark = document.documentElement.classList.contains("dark");
     setIsDark(dark);
     const observer = new MutationObserver(() =>
       setIsDark(document.documentElement.classList.contains("dark"))
     );
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
+  }, []);
+
+  // 🌐 Language detector
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+    window.addEventListener("languageChange", loadLang);
+    return () => window.removeEventListener("languageChange", loadLang);
   }, []);
 
   return (
@@ -58,7 +64,7 @@ export default function Tentang() {
               isDark ? "text-white" : "text-gray-900"
             }`}
           >
-            Tentang Namura Property
+            {lang === "id" ? "Tentang Namura Property" : "About Namura Property"}
           </motion.h1>
 
           <div className="relative mt-3">
@@ -74,20 +80,20 @@ export default function Tentang() {
               isDark ? "text-gray-300" : "text-gray-600"
             }`}
           >
-            Namura Property berkomitmen menghadirkan pengalaman transaksi yang aman,
-            transparan, dan patuh regulasi. Kami mempertemukan penjual, pembeli,
-            serta institusi pembiayaan melalui proses yang terstandarisasi dan terverifikasi.
+            {lang === "id"
+              ? "Namura Property berkomitmen menghadirkan pengalaman transaksi yang aman, transparan, dan patuh regulasi. Kami mempertemukan penjual, pembeli, serta institusi pembiayaan melalui proses yang terstandarisasi dan terverifikasi."
+              : "Namura Property is committed to delivering a secure, transparent, and regulation-compliant property transaction experience — connecting sellers, buyers, and financial institutions through standardized and verified processes."}
           </motion.p>
 
           {/* Badges */}
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
-              { icon: <ShieldCheck className="w-4 h-4" />, label: "Audit Keamanan Berkala" },
-              { icon: <FileCheck2 className="w-4 h-4" />, label: "Dokumen Tervalidasi" },
-              { icon: <Scale className="w-4 h-4" />, label: "Patuh Regulasi" },
-              { icon: <Landmark className="w-4 h-4" />, label: "Mitra Notaris/PPAT" },
-              { icon: <BadgeCheck className="w-4 h-4" />, label: "Listing Terverifikasi" },
-              { icon: <Users className="w-4 h-4" />, label: "Konsultan Berpengalaman" },
+              { icon: <ShieldCheck />, id: "Audit Keamanan", en: "Security Audit" },
+              { icon: <FileCheck2 />, id: "Dokumen Valid", en: "Verified Documents" },
+              { icon: <Scale />, id: "Patuh Regulasi", en: "Regulatory Compliance" },
+              { icon: <Landmark />, id: "Mitra Notaris", en: "Notary Partners" },
+              { icon: <BadgeCheck />, id: "Listing Terverifikasi", en: "Verified Listings" },
+              { icon: <Users />, id: "Konsultan Berpengalaman", en: "Experienced Consultants" },
             ].map((b, i) => (
               <motion.div
                 key={i}
@@ -102,7 +108,7 @@ export default function Tentang() {
                 }`}
               >
                 <span className="text-[#00ccb0]">{b.icon}</span>
-                {b.label}
+                {lang === "id" ? b.id : b.en}
               </motion.div>
             ))}
           </div>
@@ -110,86 +116,100 @@ export default function Tentang() {
           {/* CTAs */}
           <div className="mt-9 flex flex-wrap gap-3">
             <CTA href="/listing" isDark={isDark}>
-              Lihat Listing
+              {lang === "id" ? "Lihat Listing" : "View Listings"}
             </CTA>
             <CTA href="https://wa.me/6281234567890" outline isDark={isDark}>
-              Hubungi Konsultan
+              {lang === "id" ? "Hubungi Konsultan" : "Contact Consultant"}
             </CTA>
           </div>
         </div>
       </section>
 
-      {/* SECTION */}
-      <Section title="Nilai Inti Kami" isDark={isDark}>
+      {/* Core Values */}
+      <Section title={lang === "id" ? "Nilai Inti Kami" : "Our Core Values"} isDark={isDark}>
         <div className="grid md:grid-cols-3 gap-6">
           <Card
             isDark={isDark}
             icon={<ShieldCheck className="w-6 h-6 text-[#00ccb0]" />}
-            title="Kepercayaan"
+            title={lang === "id" ? "Kepercayaan" : "Trust"}
           >
-            Seluruh proses diarahkan untuk membangun rasa aman bagi semua pihak —
-            melalui verifikasi penjual, penyajian data faktual, dan kontrol kualitas berlapis.
+            {lang === "id"
+              ? "Kami memastikan setiap proses membangun rasa aman dengan verifikasi penjual dan data faktual."
+              : "We ensure every process builds trust through seller verification and factual data presentation."}
           </Card>
           <Card
             isDark={isDark}
             icon={<FileCheck2 className="w-6 h-6 text-[#00ccb0]" />}
-            title="Transparansi"
+            title={lang === "id" ? "Transparansi" : "Transparency"}
           >
-            Informasi properti ditampilkan apa adanya, termasuk status legalitas,
-            spesifikasi, serta riwayat dokumen agar keputusan didasari data yang jelas.
+            {lang === "id"
+              ? "Informasi properti disajikan apa adanya — termasuk legalitas, spesifikasi, dan riwayat dokumen."
+              : "All property information is presented clearly — including legality, specifications, and document history."}
           </Card>
           <Card
             isDark={isDark}
             icon={<Scale className="w-6 h-6 text-[#00ccb0]" />}
-            title="Kepatuhan Regulasi"
+            title={lang === "id" ? "Kepatuhan Regulasi" : "Regulatory Compliance"}
           >
-            Bermitra dengan PPAT/Notaris, mematuhi ketentuan perpajakan & perizinan—
-            transaksi berjalan sesuai hukum yang berlaku.
+            {lang === "id"
+              ? "Kami bermitra dengan PPAT/Notaris serta mematuhi peraturan perpajakan & perizinan yang berlaku."
+              : "We work with certified notaries and comply with current tax and legal regulations."}
           </Card>
         </div>
       </Section>
 
-      {/* Layanan Utama */}
-      <Section title="Layanan Utama" isDark={isDark}>
+      {/* Services */}
+      <Section title={lang === "id" ? "Layanan Utama" : "Main Services"} isDark={isDark}>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             {
               icon: <Building2 className="w-6 h-6 text-[#00ccb0]" />,
-              title: "Pencarian & Listing",
-              desc: "Eksplorasi listing terverifikasi berdasar lokasi, harga, tipe, dan preferensi.",
+              id: "Pencarian & Listing",
+              en: "Search & Listing",
+              descId: "Eksplorasi listing terverifikasi berdasarkan lokasi, harga, dan tipe.",
+              descEn: "Explore verified listings by location, price, and property type.",
             },
             {
               icon: <Handshake className="w-6 h-6 text-[#00ccb0]" />,
-              title: "Konsultasi Transaksi",
-              desc: "Pendampingan negosiasi, komparasi harga pasar, hingga strategi penawaran.",
+              id: "Konsultasi Transaksi",
+              en: "Transaction Consulting",
+              descId: "Pendampingan negosiasi dan strategi penawaran terbaik.",
+              descEn: "Guidance on negotiation and offer strategy.",
             },
             {
               icon: <Landmark className="w-6 h-6 text-[#00ccb0]" />,
-              title: "Legal & Notarial",
-              desc: "Koordinasi dokumen, cek sertifikat, AJB, balik nama, roya, hingga pajak.",
+              id: "Legal & Notarial",
+              en: "Legal & Notarial",
+              descId: "Koordinasi dokumen, sertifikat, AJB, dan perpajakan.",
+              descEn: "Coordinate documents, certificates, sale deeds, and tax matters.",
             },
             {
               icon: <MapPinned className="w-6 h-6 text-[#00ccb0]" />,
-              title: "Survey & Due Diligence",
-              desc: "Penjadwalan survey lapangan/virtual, pengecekan lingkungan & akses.",
+              id: "Survey & Due Diligence",
+              en: "Survey & Due Diligence",
+              descId: "Pengecekan lokasi, lingkungan, dan kondisi fisik properti.",
+              descEn: "Inspect location, surroundings, and physical condition.",
             },
           ].map((s, i) => (
-            <Card key={i} icon={s.icon} title={s.title} isDark={isDark}>
-              {s.desc}
+            <Card key={i} icon={s.icon} title={lang === "id" ? s.id : s.en} isDark={isDark}>
+              {lang === "id" ? s.descId : s.descEn}
             </Card>
           ))}
         </div>
       </Section>
 
       {/* Timeline */}
-      <Section title="Perjalanan & Tonggak Pencapaian" isDark={isDark}>
-        <Timeline isDark={isDark} />
+      <Section
+        title={lang === "id" ? "Perjalanan & Tonggak Pencapaian" : "Journey & Milestones"}
+        isDark={isDark}
+      >
+        <Timeline isDark={isDark} lang={lang} />
       </Section>
     </main>
   );
 }
 
-/* ========== Reusable Components ========== */
+/* ---------------- Shared Components ---------------- */
 
 function Section({ title, children, isDark }) {
   return (
@@ -228,18 +248,10 @@ function Card({ icon, title, children, isDark }) {
       <div className="flex items-start gap-3">
         <div className="mt-0.5 shrink-0">{icon}</div>
         <div>
-          <h3
-            className={`font-semibold mb-1 ${
-              isDark ? "text-white" : "text-gray-900"
-            }`}
-          >
+          <h3 className={`font-semibold mb-1 ${isDark ? "text-white" : "text-gray-900"}`}>
             {title}
           </h3>
-          <p
-            className={`text-sm leading-relaxed ${
-              isDark ? "text-gray-300" : "text-gray-600"
-            }`}
-          >
+          <p className={`text-sm leading-relaxed ${isDark ? "text-gray-300" : "text-gray-600"}`}>
             {children}
           </p>
         </div>
@@ -248,29 +260,21 @@ function Card({ icon, title, children, isDark }) {
   );
 }
 
-function Timeline({ isDark }) {
-  const items = [
-    {
-      year: "2022",
-      title: "Fondasi & Validasi Pasar",
-      desc: "Riset kebutuhan pengguna dan pelaku industri; standar verifikasi listing; kerangka kepatuhan awal.",
-    },
-    {
-      year: "2023",
-      title: "Kemitraan Legal",
-      desc: "Kolaborasi dengan jaringan PPAT/Notaris & konsultan pajak untuk menjaga kepastian hukum transaksi.",
-    },
-    {
-      year: "2024",
-      title: "Standarisasi Kualitas",
-      desc: "Kebijakan verifikasi dokumen; pedoman foto; kontrol mutu onboarding penjual.",
-    },
-    {
-      year: "2025",
-      title: "Skala & Keamanan",
-      desc: "Audit internal, enkripsi data, dan monitoring kepatuhan berkesinambungan.",
-    },
-  ];
+function Timeline({ isDark, lang }) {
+  const items =
+    lang === "id"
+      ? [
+          { year: "2022", title: "Fondasi & Validasi Pasar", desc: "Riset kebutuhan pengguna & standar verifikasi awal." },
+          { year: "2023", title: "Kemitraan Legal", desc: "Kolaborasi dengan PPAT/Notaris & konsultan pajak." },
+          { year: "2024", title: "Standarisasi Kualitas", desc: "Verifikasi dokumen & pedoman foto properti." },
+          { year: "2025", title: "Skala & Keamanan", desc: "Audit internal dan enkripsi data berkelanjutan." },
+        ]
+      : [
+          { year: "2022", title: "Foundation & Market Validation", desc: "User research & early verification standards." },
+          { year: "2023", title: "Legal Partnership", desc: "Collaborations with notaries & tax advisors." },
+          { year: "2024", title: "Quality Standardization", desc: "Document verification & photo guidelines." },
+          { year: "2025", title: "Scaling & Security", desc: "Internal audits and continuous data encryption." },
+        ];
 
   return (
     <div className="relative">
@@ -301,9 +305,7 @@ function Timeline({ isDark }) {
                 {it.year}
               </div>
               <h3
-                className={`mt-3 font-semibold ${
-                  isDark ? "text-white" : "text-gray-900"
-                }`}
+                className={`mt-3 font-semibold ${isDark ? "text-white" : "text-gray-900"}`}
               >
                 {it.title}
               </h3>
@@ -314,26 +316,6 @@ function Timeline({ isDark }) {
               >
                 {it.desc}
               </p>
-            </div>
-
-            <div className={`relative ${i % 2 === 1 ? "md:order-1" : ""}`}>
-              <div className="hidden md:block absolute left-[-1.1rem] top-2 w-2.5 h-2.5 rounded-full bg-[#00ccb0] shadow-[0_0_24px_rgba(0,204,176,0.5)]" />
-              <div
-                className={`rounded-2xl border p-5 transition backdrop-blur-xl ${
-                  isDark
-                    ? "border-white/10 bg-white/5"
-                    : "border-gray-200 bg-gray-50"
-                }`}
-              >
-                <p
-                  className={`text-sm leading-relaxed ${
-                    isDark ? "text-gray-300" : "text-gray-600"
-                  }`}
-                >
-                  Standar operasional dan protokol verifikasi dikembangkan untuk
-                  menjaga keandalan sistem dan kepastian hukum.
-                </p>
-              </div>
             </div>
           </motion.div>
         ))}

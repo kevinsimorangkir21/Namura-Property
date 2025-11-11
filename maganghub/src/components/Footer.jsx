@@ -5,35 +5,77 @@ import { useEffect, useState } from "react";
 export default function Footer() {
   const [isDark, setIsDark] = useState(false);
   const [status, setStatus] = useState("Online");
+  const [lang, setLang] = useState("id");
 
-  // 🔍 Deteksi tema aktif
+  // === TEMA ===
   useEffect(() => {
     const dark = document.documentElement.classList.contains("dark");
     setIsDark(dark);
-
     const observer = new MutationObserver(() => {
       setIsDark(document.documentElement.classList.contains("dark"));
     });
-
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
 
-  // 🟢 Simulasi status website (bisa dihubungkan dengan API status nyata)
+  // === STATUS SIMULASI ===
   useEffect(() => {
     const timeout = setTimeout(() => setStatus("Online"), 600);
     return () => clearTimeout(timeout);
   }, []);
 
-  const version = "v1.0.3"; // ⚙️ versi web kamu, bisa diambil dari package.json juga
+  // === BAHASA ===
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+    window.addEventListener("languageChange", loadLang);
+    return () => window.removeEventListener("languageChange", loadLang);
+  }, []);
+
+  const t = {
+    id: {
+      desc: "Portal properti modern untuk memudahkan kamu menemukan hunian terbaik masa kini.",
+      address: "Jakarta Selatan, Indonesia",
+      nav: ["Beranda", "Rekomendasi", "Artikel", "Cari Agen", "Kontak"],
+      navTitle: "Navigasi",
+      socialTitle: "Terhubung",
+      socialDesc: "Ikuti update terbaru dari Namura Property.",
+      terms: "Syarat & Ketentuan",
+      privacy: "Kebijakan Privasi",
+      disclaimer: "Disclaimer",
+      cookies: "Kebijakan Cookie",
+      changelog: "Catatan Versi",
+      status: "Status Situs",
+      online: "Online",
+      version: "Versi",
+      rights: "Hak cipta dilindungi.",
+    },
+    en: {
+      desc: "A modern property portal to help you find your ideal home easily and quickly.",
+      address: "South Jakarta, Indonesia",
+      nav: ["Home", "Featured", "Articles", "Find Agent", "Contact"],
+      navTitle: "Navigation",
+      socialTitle: "Connect",
+      socialDesc: "Follow Namura Property for the latest updates.",
+      terms: "Terms & Conditions",
+      privacy: "Privacy Policy",
+      disclaimer: "Disclaimer",
+      cookies: "Cookie Policy",
+      changelog: "Changelog",
+      status: "Site Status",
+      online: "Online",
+      version: "Version",
+      rights: "All rights reserved.",
+    },
+  }[lang];
+
+  const version = "v1.0.3";
 
   return (
     <footer
       className={`relative overflow-hidden transition-colors duration-500 ${
         isDark ? "bg-[#0b0f15] text-gray-400" : "bg-[#ffffff] text-gray-600"
-      } pt-20 pb-12 border-t ${
-        isDark ? "border-white/10" : "border-gray-200"
-      }`}
+      } pt-20 pb-12 border-t ${isDark ? "border-white/10" : "border-gray-200"}`}
     >
       <div className="relative max-w-7xl mx-auto px-6 md:px-10 grid md:grid-cols-3 gap-12">
         {/* Brand */}
@@ -48,16 +90,14 @@ export default function Footer() {
               Namura Property
             </span>
           </div>
-          <p className="text-sm leading-relaxed">
-            Portal properti modern untuk memudahkan kamu menemukan hunian terbaik masa kini.
-          </p>
+
+          <p className="text-sm leading-relaxed">{t.desc}</p>
 
           <p className="text-sm mt-4">
-            <strong className={isDark ? "text-white" : "text-gray-900"}>Alamat:</strong>{" "}
-            Jakarta Selatan, Indonesia
+            <strong className={isDark ? "text-white" : "text-gray-900"}>Alamat:</strong> {t.address}
           </p>
 
-          {/* 🔄 Changelog & Status */}
+          {/* Changelog & Status */}
           <div className="mt-5 flex items-center gap-3 text-sm">
             <a
               href="/changelog"
@@ -67,7 +107,7 @@ export default function Footer() {
                   : "text-[#00a48f] hover:text-[#008579]"
               }`}
             >
-              <i className="bi bi-journal-text"></i> Changelog {version}
+              <i className="bi bi-journal-text"></i> {t.changelog} {version}
             </a>
 
             <span className="text-gray-500">•</span>
@@ -83,7 +123,7 @@ export default function Footer() {
                   status === "Online" ? "text-green-400" : "text-red-500"
                 }`}
               ></i>{" "}
-              {status}
+              {t.status}: {t.online}
             </a>
           </div>
         </div>
@@ -91,10 +131,10 @@ export default function Footer() {
         {/* Navigation */}
         <div>
           <h4 className={`font-semibold mb-3 ${isDark ? "text-white" : "text-gray-900"}`}>
-            Navigasi
+            {t.navTitle}
           </h4>
           <ul className="space-y-2 text-sm">
-            {["Home", "Rekomendasi", "Berita", "Cari Agen", "Kontak"].map((item) => (
+            {t.nav.map((item) => (
               <li key={item}>
                 <a
                   href="#"
@@ -112,9 +152,9 @@ export default function Footer() {
         {/* Socials */}
         <div>
           <h4 className={`font-semibold mb-3 ${isDark ? "text-white" : "text-gray-900"}`}>
-            Terhubung
+            {t.socialTitle}
           </h4>
-          <p className="text-sm mb-4">Ikuti update terbaru dari Namura Property.</p>
+          <p className="text-sm mb-4">{t.socialDesc}</p>
           <div className="flex gap-4">
             {[
               { icon: "twitter", url: "https://twitter.com" },
@@ -147,16 +187,16 @@ export default function Footer() {
         }`}
       >
         <a href="/terms" className="hover:text-[#00ccb0] transition-colors">
-          Terms & Conditions
+          {t.terms}
         </a>
         <a href="/privacy" className="hover:text-[#00ccb0] transition-colors">
-          Privacy Policy
+          {t.privacy}
         </a>
         <a href="/disclaimer" className="hover:text-[#00ccb0] transition-colors">
-          Disclaimer
+          {t.disclaimer}
         </a>
         <a href="/cookies" className="hover:text-[#00ccb0] transition-colors">
-          Cookie Policy
+          {t.cookies}
         </a>
       </div>
 
@@ -167,8 +207,8 @@ export default function Footer() {
         }`}
       >
         © 2025{" "}
-        <strong className={isDark ? "text-white" : "text-gray-900"}>Namura Property</strong>. All
-        rights reserved.
+        <strong className={isDark ? "text-white" : "text-gray-900"}>Namura Property</strong>.{" "}
+        {t.rights}
       </div>
     </footer>
   );

@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 
 export default function CTA() {
   const [isDark, setIsDark] = useState(false);
+  const [lang, setLang] = useState("id");
 
-  // 🔍 Deteksi mode aktif (dark/light)
+  // 🔍 Deteksi tema aktif
   useEffect(() => {
     const dark = document.documentElement.classList.contains("dark");
     setIsDark(dark);
@@ -14,7 +15,6 @@ export default function CTA() {
     const observer = new MutationObserver(() => {
       setIsDark(document.documentElement.classList.contains("dark"));
     });
-
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
@@ -22,6 +22,30 @@ export default function CTA() {
 
     return () => observer.disconnect();
   }, []);
+
+  // 🌐 Deteksi bahasa aktif (sinkron dengan navbar)
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+    window.addEventListener("languageChange", loadLang);
+    return () => window.removeEventListener("languageChange", loadLang);
+  }, []);
+
+  // 🔤 Teks bilingual
+  const text = {
+    id: {
+      title: "Semua Bisa Mulai Sekarang",
+      desc: "Kami percaya setiap orang berhak mendapatkan akses properti yang aman, transparan dan terpercaya. Mulai temukan unit idealmu atau pasang listing terbaikmu hari ini.",
+      post: "Pasang Iklan Properti",
+      search: "Cari Properti",
+    },
+    en: {
+      title: "Everyone Can Start Now",
+      desc: "We believe everyone deserves access to safe, transparent, and trusted property options. Start finding your ideal unit or list your best property today.",
+      post: "Post Your Property",
+      search: "Find Properties",
+    },
+  }[lang];
 
   return (
     <section
@@ -42,7 +66,7 @@ export default function CTA() {
               : "bg-gradient-to-r from-[#00a48f] to-[#00d6b9] bg-clip-text text-transparent"
           }`}
         >
-          Semua Bisa Mulai Sekarang
+          {text.title}
         </motion.h2>
 
         {/* Description */}
@@ -55,9 +79,7 @@ export default function CTA() {
             isDark ? "text-gray-400" : "text-gray-600"
           }`}
         >
-          Kami percaya setiap orang berhak mendapatkan akses properti yang aman,
-          transparan dan terpercaya. Mulai temukan unit idealmu atau pasang
-          listing terbaikmu hari ini.
+          {text.desc}
         </motion.p>
 
         {/* Buttons */}
@@ -72,7 +94,7 @@ export default function CTA() {
                   : "bg-[#00ccb0] hover:bg-[#00b09d] text-white shadow-[0_4px_14px_-4px_rgba(0,200,180,0.3)]"
               }`}
             >
-              Pasang Iklan Properti
+              {text.post}
             </Link>
           </motion.div>
 
@@ -86,7 +108,7 @@ export default function CTA() {
                   : "border-[#00ccb0] text-[#00a590] hover:bg-[#00ccb0]/10 hover:text-[#007f70]"
               }`}
             >
-              Cari Properti
+              {text.search}
             </Link>
           </motion.div>
         </div>

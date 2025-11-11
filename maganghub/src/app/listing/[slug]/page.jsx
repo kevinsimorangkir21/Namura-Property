@@ -5,6 +5,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { propertiesData } from "@/data/propertiesData";
 import { MapPin, Home, ArrowRight, Building2 } from "lucide-react";
+import { slugify } from "@/utils/slugify";
+import { getLocalizedText } from "@/utils/getLocalizedText";
+
 
 function parseIdFromSlug(slug) {
   if (!slug) return null;
@@ -13,12 +16,6 @@ function parseIdFromSlug(slug) {
   return Number.isNaN(id) ? null : id;
 }
 
-const slugify = (s) =>
-  (s || "")
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
 
 const formatIDR = (num) =>
   new Intl.NumberFormat("id-ID", {
@@ -31,8 +28,9 @@ const getProvince = (locationStr) => (locationStr || "").split(",")[0].trim();
 
 export default function PropertyDetail({ params }) {
   const [isDark, setIsDark] = useState(false);
+  const [lang, setLang] = useState("id");
 
-  // detect theme
+  // 🌙 Detect theme
   useEffect(() => {
     const dark = document.documentElement.classList.contains("dark");
     setIsDark(dark);
@@ -42,6 +40,49 @@ export default function PropertyDetail({ params }) {
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
+
+  // 🌐 Detect language
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+    window.addEventListener("languageChange", loadLang);
+    return () => window.removeEventListener("languageChange", loadLang);
+  }, []);
+
+  const t = {
+    id: {
+      contact: "Hubungi Konsultan",
+      companyInfo: "Informasi Perusahaan",
+      consultantInfo: "Konsultan Penanggung Jawab",
+      propertyDetails: "Detail Properti",
+      propertyGallery: "Gallery Foto Properti",
+      mortgageSim: "Simulasi Cicilan KPR",
+      monthlyPayment: "Jumlah Angsuran / bulan",
+      principal: "Pokok pinjaman",
+      tenor: "Tenor",
+      interestRate: "Bunga efektif",
+      similar: "Rekomendasi Serupa",
+      noSimilar: "Belum ada properti serupa.",
+      perMeter: "Per m²",
+      chat: "Chat langsung WA →",
+    },
+    en: {
+      contact: "Contact Consultant",
+      companyInfo: "Company Information",
+      consultantInfo: "Responsible Consultant",
+      propertyDetails: "Property Details",
+      propertyGallery: "Property Gallery",
+      mortgageSim: "Mortgage Simulation",
+      monthlyPayment: "Monthly Installment",
+      principal: "Principal loan",
+      tenor: "Tenor",
+      interestRate: "Effective interest rate",
+      similar: "Similar Recommendations",
+      noSimilar: "No similar properties yet.",
+      perMeter: "Per m²",
+      chat: "Chat via WhatsApp →",
+    },
+  }[lang];
 
   const id = parseIdFromSlug(params.slug);
   const prop = propertiesData.find((p) => p.id === id);
@@ -91,7 +132,7 @@ export default function PropertyDetail({ params }) {
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-        {/* Header visual */}
+        {/* Header Image */}
         <div
           className={`w-full rounded-2xl sm:rounded-3xl overflow-hidden border mb-10 ${
             isDark ? "border-white/10" : "border-gray-200 shadow-md"
@@ -117,10 +158,8 @@ export default function PropertyDetail({ params }) {
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-3 mb-8 text-[12px] sm:text-[13px]">
-          {[
-            { icon: <Home className="w-4 h-4" />, text: prop.type },
-            { icon: <MapPin className="w-4 h-4" />, text: prop.location },
-          ].map((tag, i) => (
+          {[{ icon: <Home className="w-4 h-4" />, text: prop.type },
+            { icon: <MapPin className="w-4 h-4" />, text: prop.location }].map((tag, i) => (
             <span
               key={i}
               className={`inline-flex items-center gap-1 px-3 py-1 rounded-full border ${
@@ -144,14 +183,16 @@ export default function PropertyDetail({ params }) {
             <div className="text-[#00ccb0] font-black text-2xl sm:text-3xl">{prop.price}</div>
             {prop.perMeter && (
               <div className={`text-sm mt-1 ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-                Per m²: {prop.perMeter}
+                {t.perMeter}: {prop.perMeter}
               </div>
             )}
           </div>
 
           <a
             href={`https://wa.me/${prop.consultant?.whatsapp?.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-              `Halo, saya tertarik dengan properti: ${prop.title} (${prop.price}).`
+              lang === "id"
+                ? `Halo, saya tertarik dengan properti: ${prop.title} (${prop.price}).`
+                : `Hello, I'm interested in the property: ${prop.title} (${prop.price}).`
             )}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -161,24 +202,19 @@ export default function PropertyDetail({ params }) {
                 : "border-[#00a48f] text-[#00a48f] hover:bg-[#00ccb0]/10"
             }`}
           >
-            Hubungi Konsultan
+            {t.contact}
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
           </a>
         </div>
 
-        {/* Company + Consultant */}
+        {/* Company Info & Consultant */}
         <div className="mb-14 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Company */}
           <div
             className={`rounded-2xl p-5 sm:p-6 border ${
-              isDark
-                ? "bg-white/8 border-white/10"
-                : "bg-gray-50 border-gray-200 shadow-sm"
+              isDark ? "bg-white/8 border-white/10" : "bg-gray-50 border-gray-200 shadow-sm"
             }`}
           >
-            <h3 className="text-lg font-semibold text-[#00ccb0] mb-2">
-              Informasi Perusahaan
-            </h3>
+            <h3 className="text-lg font-semibold text-[#00ccb0] mb-2">{t.companyInfo}</h3>
             <div className={isDark ? "text-gray-200" : "text-gray-800"}>
               {prop.company?.name || "-"}
             </div>
@@ -199,12 +235,9 @@ export default function PropertyDetail({ params }) {
             )}
           </div>
 
-          {/* Consultant */}
           <div
             className={`rounded-2xl p-5 sm:p-6 flex items-center gap-4 flex-col sm:flex-row text-center sm:text-left border ${
-              isDark
-                ? "bg-white/8 border-white/10"
-                : "bg-gray-50 border-gray-200 shadow-sm"
+              isDark ? "bg-white/8 border-white/10" : "bg-gray-50 border-gray-200 shadow-sm"
             }`}
           >
             {prop.consultant?.photo && (
@@ -216,30 +249,28 @@ export default function PropertyDetail({ params }) {
             )}
             <div>
               <h3 className="text-lg font-semibold text-[#00ccb0] mb-1">
-                Konsultan Penanggung Jawab
+                {t.consultantInfo}
               </h3>
               <div className={isDark ? "text-gray-200" : "text-gray-800"}>
                 {prop.consultant?.name || "-"}
               </div>
               {prop.consultant?.whatsapp && (
                 <a
-                  href={`https://wa.me/${prop.consultant.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-                    `Halo, saya tertarik dengan properti: ${prop.title}.`
-                  )}`}
+                  href={`https://wa.me/${prop.consultant.whatsapp.replace(/[^0-9]/g, "")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block mt-2 text-sm text-[#00ccb0] hover:underline"
                 >
-                  Chat langsung WA →
+                  {t.chat}
                 </a>
               )}
             </div>
           </div>
         </div>
 
-        {/* Detail Properti */}
+        {/* Property Details */}
         <section className="mb-14">
-          <h2 className="text-xl sm:text-2xl font-bold mb-4">Detail Properti</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">{t.propertyDetails}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {specEntries.map(([label, value]) => (
               <div
@@ -250,7 +281,11 @@ export default function PropertyDetail({ params }) {
                     : "bg-gray-50 border-gray-200 hover:bg-gray-100"
                 }`}
               >
-                <div className={`text-[12px] uppercase mb-1 ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+                <div
+                  className={`text-[12px] uppercase mb-1 ${
+                    isDark ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
                   {label.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase())}
                 </div>
                 <div className={isDark ? "text-gray-100" : "text-gray-800"}>{value || "-"}</div>
@@ -262,7 +297,7 @@ export default function PropertyDetail({ params }) {
         {/* Gallery */}
         {prop.gallery && prop.gallery.length > 0 && (
           <section className="mb-14">
-            <h2 className="text-xl sm:text-2xl font-bold mb-4">Gallery Foto Properti</h2>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">{t.propertyGallery}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
               {prop.gallery.map((img, idx) => (
                 <div
@@ -280,65 +315,71 @@ export default function PropertyDetail({ params }) {
           </section>
         )}
 
-        {/* Simulasi KPR */}
+        {/* KPR Simulation */}
         <section className="mb-16">
-          <h2 className="text-xl sm:text-2xl font-bold mb-4">Simulasi Cicilan KPR</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">{t.mortgageSim}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Input */}
             <div
               className={`md:col-span-2 rounded-2xl p-4 sm:p-5 border ${
-                isDark
-                  ? "bg-white/8 border-white/10"
-                  : "bg-gray-50 border-gray-200 shadow-sm"
+                isDark ? "bg-white/8 border-white/10" : "bg-gray-50 border-gray-200 shadow-sm"
               }`}
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  ["Harga Properti (Rp)", price.toLocaleString("id-ID"), (v) => setPrice(Number(v.replace(/[^\d]/g, "")))],
+                {[["Harga Properti (Rp)", price.toLocaleString("id-ID"), (v) => setPrice(Number(v.replace(/[^\d]/g, "")))],
                   ["Uang Muka (%)", dpPercent, (v) => setDpPercent(Number(v))],
                   ["Jangka Waktu (tahun)", years, (v) => setYears(Number(v))],
-                  ["Suku Bunga (%/tahun)", interest, (v) => setInterest(Number(v))],
-                ].map(([label, value, handler], i) => (
-                  <div key={i}>
-                    <label className={`block text-sm mb-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-                      {label}
-                    </label>
-                    <input
-                      type="number"
-                      value={value}
-                      onChange={(e) => handler(e.target.value)}
-                      className={`w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#00ccb0] ${
-                        isDark
-                          ? "bg-white/10 border-white/10 text-gray-100"
-                          : "bg-white border-gray-300 text-gray-800"
-                      }`}
-                    />
-                    {i === 1 && (
-                      <div className={`text-xs mt-1 ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-                        ≈ {formatIDR(dpAmount)}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                  ["Suku Bunga (%/tahun)", interest, (v) => setInterest(Number(v))]].map(
+                  ([label, value, handler], i) => (
+                    <div key={i}>
+                      <label
+                        className={`block text-sm mb-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}
+                      >
+                        {label}
+                      </label>
+                      <input
+                        type="number"
+                        value={value}
+                        onChange={(e) => handler(e.target.value)}
+                        className={`w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#00ccb0] ${
+                          isDark
+                            ? "bg-white/10 border-white/10 text-gray-100"
+                            : "bg-white border-gray-300 text-gray-800"
+                        }`}
+                      />
+                      {i === 1 && (
+                        <div
+                          className={`text-xs mt-1 ${
+                            isDark ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        >
+                          ≈ {formatIDR(dpAmount)}
+                        </div>
+                      )}
+                    </div>
+                  )
+                )}
               </div>
             </div>
 
-            {/* Output */}
             <div
               className={`rounded-2xl p-5 border ${
-                isDark
-                  ? "bg-white/8 border-white/10"
-                  : "bg-gray-50 border-gray-200 shadow-sm"
+                isDark ? "bg-white/8 border-white/10" : "bg-gray-50 border-gray-200 shadow-sm"
               }`}
             >
               <div className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-                Jumlah Angsuran / bulan
+                {t.monthlyPayment}
               </div>
               <div className="text-2xl font-extrabold text-[#00ccb0] mt-1">{formatIDR(monthly)}</div>
               <div className={`mt-4 space-y-1 text-sm ${isDark ? "text-gray-300" : "text-gray-700"}`}>
-                <div>Pokok pinjaman: <span className="font-medium">{formatIDR(principal)}</span></div>
-                <div>Tenor: <span className="font-medium">{years} tahun</span> ({years * 12} bulan)</div>
-                <div>Bunga efektif: <span className="font-medium">{interest}% / tahun</span></div>
+                <div>
+                  {t.principal}: <span className="font-medium">{formatIDR(principal)}</span>
+                </div>
+                <div>
+                  {t.tenor}: <span className="font-medium">{years} tahun</span> ({years * 12} bulan)
+                </div>
+                <div>
+                  {t.interestRate}: <span className="font-medium">{interest}% / tahun</span>
+                </div>
               </div>
             </div>
           </div>
@@ -346,9 +387,9 @@ export default function PropertyDetail({ params }) {
 
         {/* Related */}
         <section>
-          <h2 className="text-xl sm:text-2xl font-bold mb-4">Rekomendasi Serupa</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">{t.similar}</h2>
           {relatedHybrid.length === 0 ? (
-            <div className={isDark ? "text-gray-400" : "text-gray-600"}>Belum ada properti serupa.</div>
+            <div className={isDark ? "text-gray-400" : "text-gray-600"}>{t.noSimilar}</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {relatedHybrid.map((p) => (
@@ -393,7 +434,7 @@ export default function PropertyDetail({ params }) {
                     <div className="mt-3 flex justify-end">
                       <Link href={`/listing/${p.id}-${slugify(p.title)}`}>
                         <button className="px-3 py-2 rounded-lg border border-[#00ccb0] text-[#00ccb0] hover:bg-[#00ccb0]/10 transition text-xs font-semibold inline-flex items-center gap-1">
-                          Lihat Detail
+                          {lang === "id" ? "Lihat Detail" : "View Details"}
                           <Building2 className="w-3.5 h-3.5" />
                         </button>
                       </Link>

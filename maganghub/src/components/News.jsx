@@ -2,37 +2,11 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const news = [
-  {
-    title: "Harga Rumah Suburban Jabodetabek Naik 8.2% dalam 6 Bulan",
-    category: "Market Update",
-    date: "7 Nov 2025",
-    img: "/news/jabodetabek.png",
-  },
-  {
-    title: "Bank Mulai Longgarkan DP KPR untuk Milenial",
-    category: "KPR & Finance",
-    date: "6 Nov 2025",
-    img: "/news/dp-kpr.png",
-  },
-  {
-    title: "Developer Premium Masuk Kawasan Bogor Selatan",
-    category: "Investment",
-    date: "4 Nov 2025",
-    img: "/news/bogor.png",
-  },
-  {
-    title: "Properti Dekat Akses TOD Jadi Incaran Investor",
-    category: "Tren Properti",
-    date: "2 Nov 2025",
-    img: "/news/tod.png",
-  },
-];
-
 export default function News() {
   const [isDark, setIsDark] = useState(false);
+  const [lang, setLang] = useState("id");
 
-  // 👀 Deteksi mode aktif
+  // 🌙 Deteksi mode aktif
   useEffect(() => {
     const dark = document.documentElement.classList.contains("dark");
     setIsDark(dark);
@@ -45,6 +19,80 @@ export default function News() {
     });
     return () => observer.disconnect();
   }, []);
+
+  // 🌐 Deteksi bahasa aktif
+  useEffect(() => {
+    const loadLang = () => setLang(localStorage.getItem("lang") || "id");
+    loadLang();
+    window.addEventListener("languageChange", loadLang);
+    return () => window.removeEventListener("languageChange", loadLang);
+  }, []);
+
+  // 📰 Konten bilingual
+  const content = {
+    id: {
+      title: "Berita & Insight",
+      desc: "Update terbaru industri properti, ekonomi & tren pasar Indonesia.",
+      button: "Lihat Semua Berita →",
+      news: [
+        {
+          title: "Harga Rumah Suburban Jabodetabek Naik 8.2% dalam 6 Bulan",
+          category: "Market Update",
+          date: "7 Nov 2025",
+          img: "/news/jabodetabek.png",
+        },
+        {
+          title: "Bank Mulai Longgarkan DP KPR untuk Milenial",
+          category: "KPR & Finance",
+          date: "6 Nov 2025",
+          img: "/news/dp-kpr.png",
+        },
+        {
+          title: "Developer Premium Masuk Kawasan Bogor Selatan",
+          category: "Investment",
+          date: "4 Nov 2025",
+          img: "/news/bogor.png",
+        },
+        {
+          title: "Properti Dekat Akses TOD Jadi Incaran Investor",
+          category: "Tren Properti",
+          date: "2 Nov 2025",
+          img: "/news/tod.png",
+        },
+      ],
+    },
+    en: {
+      title: "News & Insights",
+      desc: "The latest updates on property, economy, and market trends in Indonesia.",
+      button: "View All News →",
+      news: [
+        {
+          title: "Suburban Housing Prices in Jabodetabek Rise 8.2% in 6 Months",
+          category: "Market Update",
+          date: "Nov 7, 2025",
+          img: "/news/jabodetabek.png",
+        },
+        {
+          title: "Banks Begin to Ease Mortgage Down Payments for Millennials",
+          category: "KPR & Finance",
+          date: "Nov 6, 2025",
+          img: "/news/dp-kpr.png",
+        },
+        {
+          title: "Premium Developers Enter South Bogor Area",
+          category: "Investment",
+          date: "Nov 4, 2025",
+          img: "/news/bogor.png",
+        },
+        {
+          title: "Properties Near TOD Access Attract More Investors",
+          category: "Property Trends",
+          date: "Nov 2, 2025",
+          img: "/news/tod.png",
+        },
+      ],
+    },
+  }[lang];
 
   return (
     <section
@@ -61,7 +109,7 @@ export default function News() {
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
-              Berita & Insight
+              {content.title}
             </h2>
 
             <p
@@ -69,7 +117,7 @@ export default function News() {
                 isDark ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              Update terbaru industri properti, ekonomi & tren pasar Indonesia.
+              {content.desc}
             </p>
           </div>
 
@@ -80,13 +128,13 @@ export default function News() {
                 : "border-[#00ccb0] text-[#00bba4] hover:bg-[#00ccb0]/10"
             }`}
           >
-            Lihat Semua Berita →
+            {content.button}
           </button>
         </div>
 
         {/* GRID NEWS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {news.map((item, i) => (
+          {content.news.map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 14 }}
