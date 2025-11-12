@@ -54,6 +54,6 @@ At Namura Property, we believe that finding the perfect property should be a sea
 ## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/> **Developers**
 | No | Photo | Name | Role | Contact |
 | -- | ----- | ---- | ---- | ------- |
-| 1 | ![Kevin Simorangkir](./maganghub/public/readme/Privacy.jpg) | Kevin Simorangkir | Full-Stack Developer | [Email](mailto:vin.simorangkir81@gmail.com) |
+| 1 | ![Kevin Simorangkir](./maganghub/public/readme/Privacy.jpg "Kevin Simorangkir" width="50") | Kevin Simorangkir | Full-Stack Developer | [Email](mailto:vin.simorangkir81@gmail.com) |
 
 <p align="center">© 2025 Namura Property. All rights reserved.</p>
