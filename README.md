@@ -10,15 +10,13 @@
 </div>
 
 ## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/> **Table Of Contents**
-[Product Introduction](#product-introduction)
-
-[Features](#features)
-
-[Technologies Used](#technologies-used)
-
-[Developer Team](#developer-team)
-
-[Philosophy](#philosophy)
+| No | Title | Description |
+| -- | ----- | ----------- |
+| 1 | [Introduction](#-introduction) | Overview of Namura Property |
+| 2 | [Features](#-features) | Key features of the platform |
+| 3 | [Philosophy](#-philosophy) | Core values and mission statement |
+| 4 | [Technologies Used](#-technologies-used) | Technologies and tools used in development |
+| 5 | [Developers](#-developers) | Information about the development team |
 
 <!-- ## <img src="Images/Mentahan/LogoPanah.svg" width="30px;"/> **Introduction**
 This study aims to compare the performance of the BiGRU model with Att-BiGRU in analyzing sentiment on movie review data. This study not only provides insight into the advantages of the Attention mechanism in improving model performance, but also contributes to the development of more effective sentiment analysis methods for data with complex characteristics such as movie reviews.
