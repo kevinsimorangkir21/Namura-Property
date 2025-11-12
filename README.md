@@ -18,87 +18,43 @@
 | 4 | [Technologies Used](#-technologies-used) | Technologies and tools used in development |
 | 5 | [Developers](#-developers) | Information about the development team |
 
-<!-- ## <img src="Images/Mentahan/LogoPanah.svg" width="30px;"/> **Introduction**
-This study aims to compare the performance of the BiGRU model with Att-BiGRU in analyzing sentiment on movie review data. This study not only provides insight into the advantages of the Attention mechanism in improving model performance, but also contributes to the development of more effective sentiment analysis methods for data with complex characteristics such as movie reviews.
+## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/> **Product Introduction**
+Namura Property is a web-based platform designed to help users find their dream properties with ease. Whether you're looking to buy, sell, or rent, Namura Property offers a comprehensive solution for all your real estate needs. Our platform provides an intuitive interface, advanced search capabilities, and detailed property listings to ensure that users can find the perfect property that meets their requirements. This feature-rich platform is built with the latest web technologies to deliver a seamless user experience.
 
-## <img src="Images/Mentahan/LogoPanah.svg" width="30px;"/> **Member Of Team**
+## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/> **Features**
+| No | Feature | Description |
+| -- | ------- | ----------- |
+| 1 | Property Listings | Comprehensive listings with detailed information and images. |
+| 2 | Advanced Search | Filter properties based on location, price, size, and more. |
+| 3 | User Accounts | Create and manage user profiles for personalized experiences. |
+| 4 | Contact Agents | Direct communication with property agents for inquiries. |
+| 5 | Responsive Design | Optimized for all devices, ensuring accessibility on mobile and desktop. |
+| 6 | Favorites | Save and manage favorite properties for easy access later. |
+| 7 | Map Integration | View property locations on an interactive map. |
+| 8 | Reviews and Ratings | Read and leave reviews for properties and agents. |
+| 9 | Notifications | Receive updates on new listings and price changes. |
+| 10 | Secure Transactions | Safe and secure platform for property transactions. |
+| 11 | Blog and Resources | Access articles and resources related to real estate. |
+| 12 | Multi-language Support | Available in multiple languages for a global audience. |
 
-|  [<img src="Images/Mentahan/Kevin.png" width="100px;"/><br /><sub><b>Kevin Simorangkir</b></sub>](https://github.com/kevinsimorangkir21)<br /> 121140150 <br /> | [<img src="Images/Mentahan/Husni.png" width="100px;"/><br /><sub><b>Husni Na'fa Mubarok</b></sub>](https://github.com/nafamubarokhusni)<br />121140037 <br /> | [<img src="Images/Mentahan/Dwi.png" width="100px;"/><br /><sub><b>Dwi Sulistiani</b></sub>](https://github.com/Dwisuliatiani) <br/> 121450079 <br /> | [<img src="Images/Mentahan/Dhita.png" width="100px;"/><br /><sub><b>Ramadhita Atifa</b></sub>](https://github.com/ramadhitatifa)<br /> 121450131 <br /> | [<img src="Images/Mentahan/Maya.png" width="100px;"/><br /><sub><b>Mayada</b></sub>](https://github.com/awesomemaya1)<br />121450145 <br /> |
-|--|--|--|--|--|
+## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/> **Philosophy**
+At Namura Property, we believe that finding the perfect property should be a seamless and enjoyable experience. Our mission is to empower users with the tools and information they need to make informed decisions in the real estate market. We are committed to transparency, user-centric design, and continuous innovation to ensure that our platform meets the evolving needs of our users. By fostering trust and providing exceptional service, we aim to be the go-to destination for all real estate needs. Developed by Kevin Simorangkir, Namura Property embodies our dedication to excellence and our passion for helping people find their dream homes.
 
-## <img src="Images/Mentahan/LogoPanah.svg" width="30px;"/> **ID & Position Member Of Team**
-<div align="left">
+## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/> **Technologies Used**
+| No | Technology | Description | Version |
+| -- | ---------- | ----------- | ------- |
+| 1 | Next.js | A React framework for building server-side rendered applications. | 13.4.4 |
+| 2 | React | A JavaScript library for building user interfaces. | 18.2.0 |
+| 3 | Tailwind CSS | A utility-first CSS framework for rapid UI development. | 3.3.2 |
+| 4 | Vercel | A platform for deploying and hosting web applications. | - |
+| 5 | JavaScript | The programming language used for web development. | ES6+ |
+| 6 | HTML5 | The standard markup language for creating web pages. | 5 |
+| 7 | CSS3 | The style sheet language used for describing the presentation of web pages. | 3 |
 
-| Name | ID Student | Class | Major | Position 
-| :---: | :---: | :---: | :---: | :---: |
-| Kevin Simorangkir     | 121140150 | RA | Informatics Engineering | Chairman
-| Husni Na'fa Mubarok   | 121450078 | RA | Sains Data | Member
-| Dwi Sulistiani        | 121450079 | RB | Sains Data | Member
-| Ramadhita Atifa Hendri| 121450131 | RC | Sains Data | Member
-| Mayada                | 121450145 | RC | Sains Data | Member
+## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/> **Developers**
+| No | Name | Role | Contact |
+| -- | ---- | ---- | ------- |
+| 1 | Kevin Simorangkir | Full-Stack Developer | [Email](mailto:vin.simorangkir81@gmail.com) |
+---
 
-</div>
-
-##  <img src="Images/Mentahan/LogoPanah.svg" width="30px;"/> **Dataset**
-The dataset used in the research on Sentiment Analysis Using GRU is a Film Review consisting of 5000 data that has been obtained. The dataset can be downloaded via the link below:
-
-```bash
-https://bit.ly/Dataset-ReviewFilm
-```
-
-##  <img src="Images/Mentahan/LogoPanah.svg" width="30px;"/> **Installation Steps**
-### <img src="Images/Mentahan/LogoPanah2.svg" width="30px;"/> **Preparation of Needs**
-Some of the preparations needed to carry out this research project are as follows:
-
-<li> Install python software/code first </li>
-
-```bash
-https://www.python.org/downloads/
-```
-
-<li> After installing, first check whether Python has been installed properly using the following command: </li>
-
-```bash
-python --version
-```
-
-<li> Once the python version appears, please open a text editor that supports it such as Visual Studio Code and the web-based Google Collab. Here are the links to use both (please download and install):</li>
-
-```bash
-[Software VISUAL STUDIO CODE](https://code.visualstudio.com/)
-```
-  
-```bash
-[Software GOOGLE COLLAB](https://colab.research.google.com/)
-```
-
-### <img src="Images/Mentahan/LogoPanah2.svg" width="30px;"/> **Program Running Stage**
-
-<li> Open a terminal / something like GitBash etc. Please clone this Repository by following the following command and copy it in your terminal:</li>
-
-```bash
-https://github.com/kevinsimorangkir21/Sentiment-Analysis-Using-GRU.git
-```
-
-<li> Please change the directory to point to the clone folder with the following command:</li>
-
-```bash
-cd Sentiment-Analysis-Using-GRU
-```
-
-<li> Next step, open the text editor that you have that supports python language. Please direct your cursor to the Analysis GRU.ipynb file.</li>
-
-<li> Please click <b>Run All (On Visual Studio Code)</b> and <b>Runtime -> Run All (On Google Collab)<b\> . Then the program will run successfully.</li>
-
-## <img src="Images/Mentahan/LogoPanah.svg" width="30px;"/> **Research Method**
-The following is a research method in analyzing sentiment using GRU on the Film Review Dataset:
-<img src="Images/Mentahan/Method.png" />
-
-## <img src="Images/Mentahan/LogoPanah.svg" width="30px;"/> **Documentation**
-The following is documentation of a series of studies for this major Deep Learning assignment for Group 06, namely as follows:
-<img src="Images/Documentation/Documentation.png" />
-
-## <img src="Images/Mentahan/LogoPanah.svg" width="30px;"/> **Presentation Video**
-<a href="https://youtu.be/7UIpQ3yELWA?si=i9jWYmH6eDnOp2CP">
-  <img src="https://i.ytimg.com/vi/7UIpQ3yELWA/maxresdefault.jpg" alt="Presentation Video">
-</a> -->
+<p align="center">© 2025 Namura Property. All rights reserved.</p>
