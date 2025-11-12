@@ -7,14 +7,19 @@ import { useEffect, useState } from "react";
 export default function MaintenancePage() {
   const [isDark, setIsDark] = useState(false);
   const [lang, setLang] = useState("id");
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [isFinished, setIsFinished] = useState(false);
 
-  // 🌙 deteksi mode
+  // 🌙 deteksi mode gelap
   useEffect(() => {
     const update = () =>
       setIsDark(document.documentElement.classList.contains("dark"));
     update();
     const obs = new MutationObserver(update);
-    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
     return () => obs.disconnect();
   }, []);
 
@@ -25,6 +30,44 @@ export default function MaintenancePage() {
     window.addEventListener("languageChange", loadLang);
     return () => window.removeEventListener("languageChange", loadLang);
   }, []);
+
+  // ⏳ countdown logic — target: jam 11:00 hari ini (lokal)
+  useEffect(() => {
+    // buat objek target jam 11:00 hari ini (lokal mesin)
+    const target = new Date();
+    target.setHours(11, 0, 0, 0); // jam 11:00:00.000 hari ini
+
+    // jika sudah lewat jam 11 hari ini -> langsung tandai selesai
+    const now = new Date().getTime();
+    if (now >= target.getTime()) {
+      setIsFinished(true);
+      setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+      return;
+    }
+
+    // interval per-detik untuk update countdown
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const diff = target.getTime() - now;
+
+      if (diff <= 0) {
+        clearInterval(interval);
+        setIsFinished(true);
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      setTimeLeft({ hours, minutes, seconds });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []); // run sekali saat mount
+
+  // 🕐 format waktu countdown
+  const formatTime = (num) => num.toString().padStart(2, "0");
 
   return (
     <main
@@ -80,21 +123,38 @@ export default function MaintenancePage() {
           : "We’re upgrading our systems to serve you better. Please check back shortly."}
       </motion.p>
 
-      {/* status */}
+      {/* status dengan countdown */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className={`inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl border backdrop-blur-xl ${
+        className={`inline-flex flex-col items-center gap-2 text-sm px-6 py-3 rounded-xl border backdrop-blur-xl ${
           isDark
             ? "border-white/10 bg-white/5 text-gray-400"
             : "border-gray-200 bg-gray-50 text-gray-600"
         }`}
       >
-        <Clock className="w-4 h-4 text-[#00ccb0]" />
-        {lang === "id"
-          ? "Estimasi selesai: segera"
-          : "Estimated completion: soon"}
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4 text-[#00ccb0]" />
+          {lang === "id" ? "Estimasi selesai:" : "Estimated completion:"}
+        </div>
+
+        {!isFinished ? (
+          <div className="text-lg font-mono text-[#00ccb0] mt-1">
+            {formatTime(timeLeft.hours)}:{formatTime(timeLeft.minutes)}:
+            {formatTime(timeLeft.seconds)}
+          </div>
+        ) : (
+          <span className="text-[#00ccb0] font-semibold mt-1">
+            {lang === "id" ? "Selesai!" : "Completed!"}
+          </span>
+        )}
+
+        <div className="text-xs mt-1 text-gray-400">
+          {lang === "id"
+            ? "Target: Hari ini jam 11:00 (waktu lokal)"
+            : "Target: Today 11:00 (local time)"}
+        </div>
       </motion.div>
 
       {/* tombol */}
