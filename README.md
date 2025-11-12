@@ -3,8 +3,6 @@
 <h1> Namura Property - Temukan Properti Impian Anda </h1>
 
 <!-- [![Library](https://img.shields.io/badge/pygame-orange)](#) -->
-[![Github Contributors](https://img.shields.io/badge/all_contributors-1-teal.svg)](#)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
