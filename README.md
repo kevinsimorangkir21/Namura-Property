@@ -12,11 +12,11 @@
 ## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/> **Table Of Contents**
 | No | Title | Description |
 | -- | ----- | ----------- |
-| 1 | [Introduction](#-introduction) | Overview of Namura Property |
-| 2 | [Features](#-features) | Key features of the platform |
-| 3 | [Philosophy](#-philosophy) | Core values and mission statement |
-| 4 | [Technologies Used](#-technologies-used) | Technologies and tools used in development |
-| 5 | [Developers](#-developers) | Information about the development team |
+| 1 | [Product Introduction](#product-introduction) | Overview of Namura Property platform. |
+| 2 | [Features](#features) | Key features of the platform. |
+| 3 | [Philosophy](#philosophy) | Core values and mission statement. |
+| 4 | [Technologies Used](#technologies-used) | Technologies and tools used in development |
+| 5 | [Developers](#developers) | Information about the development team |
 
 ## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/> **Product Introduction**
 Namura Property is a web-based platform designed to help users find their dream properties with ease. Whether you're looking to buy, sell, or rent, Namura Property offers a comprehensive solution for all your real estate needs. Our platform provides an intuitive interface, advanced search capabilities, and detailed property listings to ensure that users can find the perfect property that meets their requirements. This feature-rich platform is built with the latest web technologies to deliver a seamless user experience.
