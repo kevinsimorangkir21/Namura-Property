@@ -9,9 +9,7 @@
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 </div>
 
-## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/>
-
-**Table of Contents**
+## <img src="./maganghub/public/readme/Arrow.svg" width="30px;"/> **Table Of Contents**
 [Product Introduction](#product-introduction)
 
 [Features](#features)
@@ -21,7 +19,6 @@
 [Developer Team](#developer-team)
 
 [Philosophy](#philosophy)
-
 
 <!-- ## <img src="Images/Mentahan/LogoPanah.svg" width="30px;"/> **Introduction**
 This study aims to compare the performance of the BiGRU model with Att-BiGRU in analyzing sentiment on movie review data. This study not only provides insight into the advantages of the Attention mechanism in improving model performance, but also contributes to the development of more effective sentiment analysis methods for data with complex characteristics such as movie reviews.
