@@ -6,19 +6,27 @@ import { useState, useEffect } from "react";
 export default function LanguageToggle({ onChange }) {
   const [lang, setLang] = useState("id");
 
-  // ambil bahasa tersimpan
+  // Ambil bahasa tersimpan saat reload
   useEffect(() => {
     const saved = localStorage.getItem("lang") || "id";
     setLang(saved);
-    if (onChange) onChange(saved);
+
+    // kirim ke parent
+    onChange?.(saved);
   }, []);
 
-  // toggle bahasa
+  // Toggle bahasa
   const toggleLang = () => {
     const nextLang = lang === "id" ? "en" : "id";
+
     setLang(nextLang);
     localStorage.setItem("lang", nextLang);
-    if (onChange) onChange(nextLang);
+
+    // Kirim ke parent bila ada
+    onChange?.(nextLang);
+
+    // PENTING: Notifikasi ke semua komponen
+    window.dispatchEvent(new Event("languageChange"));
   };
 
   return (
@@ -27,6 +35,7 @@ export default function LanguageToggle({ onChange }) {
       whileTap={{ scale: 0.9 }}
       className="relative flex items-center justify-center w-12 h-7 rounded-full border border-black/20 dark:border-white/10 bg-gray-100 dark:bg-white/10 transition-all"
     >
+      {/* Slider */}
       <motion.div
         layout
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -34,16 +43,20 @@ export default function LanguageToggle({ onChange }) {
           lang === "id" ? "left-[2px]" : "right-[2px]"
         }`}
       />
+
+      {/* ID */}
       <span
         className={`absolute left-1 text-[10px] font-semibold ${
-          lang === "id" ? "text-black" : "text-gray-400"
+          lang === "id" ? "text-black dark:text-white" : "text-gray-400"
         }`}
       >
         ID
       </span>
+
+      {/* EN */}
       <span
         className={`absolute right-1 text-[10px] font-semibold ${
-          lang === "en" ? "text-black" : "text-gray-400"
+          lang === "en" ? "text-black dark:text-white" : "text-gray-400"
         }`}
       >
         EN
