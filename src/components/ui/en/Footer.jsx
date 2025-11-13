@@ -20,7 +20,7 @@ export default function FooterEN() {
 
   const t = {
     desc: "A modern property portal designed to help you find your ideal home easily and quickly.",
-    address: "Bunga Merak Street No. 03 Perumnas Way Kandis, Bandar Lampung, Indonesia"
+    address: "Bunga Merak Street No. 03 Perumnas Way Kandis, Bandar Lampung, Indonesia",
     navTitle: "Navigation",
     nav: [
       { name: "Home", link: "/en" },
