@@ -1,6 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+
+import { articlesEN } from "@/data/articlesEN";
 
 export default function News() {
   const [isDark, setIsDark] = useState(false);
@@ -18,37 +21,13 @@ export default function News() {
     return () => observer.disconnect();
   }, []);
 
-  // English content
+  // Ambil 4 artikel terbaru
+  const latestNews = articlesEN.slice(0, 4);
+
   const content = {
     title: "News & Insights",
     desc: "The latest updates on property, economy and market trends in Indonesia.",
     button: "View All News →",
-    news: [
-      {
-        title: "Suburban Housing Prices in Jabodetabek Rise 8.2% in 6 Months",
-        category: "Market Update",
-        date: "Nov 7, 2025",
-        img: "/news/jabodetabek.png",
-      },
-      {
-        title: "Banks Ease Mortgage Down Payments for Millennials",
-        category: "Mortgage & Finance",
-        date: "Nov 6, 2025",
-        img: "/news/dp-kpr.png",
-      },
-      {
-        title: "Premium Developers Enter South Bogor Area",
-        category: "Investment",
-        date: "Nov 4, 2025",
-        img: "/news/bogor.png",
-      },
-      {
-        title: "Properties Near TOD Access Attract Investors",
-        category: "Property Trends",
-        date: "Nov 2, 2025",
-        img: "/news/tod.png",
-      },
-    ],
   };
 
   return (
@@ -58,24 +37,28 @@ export default function News() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div>
-            <h2 className={`text-4xl font-black tracking-tight ${
-              isDark ? "text-white" : "text-gray-900"
-            }`}>
+            <h2
+              className={`text-4xl font-black tracking-tight ${
+                isDark ? "text-white" : "text-gray-900"
+              }`}
+            >
               {content.title}
             </h2>
 
-            <p className={`text-sm mt-2 ${
-              isDark ? "text-gray-400" : "text-gray-600"
-            }`}>
+            <p
+              className={`text-sm mt-2 ${
+                isDark ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
               {content.desc}
             </p>
           </div>
 
-          <button
+          <Link
+            href="/en/articles"
             className={`px-4 py-2 rounded-lg border text-sm font-semibold transition ${
               isDark
                 ? "border-[#00bba4] text-[#00ccb0] hover:bg-white/5"
@@ -83,37 +66,45 @@ export default function News() {
             }`}
           >
             {content.button}
-          </button>
+          </Link>
         </div>
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {content.news.map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06 }}
-              className={`rounded-2xl overflow-hidden border transition-all cursor-pointer ${
-                isDark
-                  ? "bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/[0.08]"
-                  : "bg-white border-gray-200 hover:border-[#00ccb0]/40 hover:shadow-[0_8px_25px_-10px_rgba(0,200,180,0.25)]"
-              }`}
-            >
-              <img src={item.img} className="w-full h-40 object-cover opacity-95" />
+          {latestNews.map((item, i) => (
+            <Link key={i} href={`/en/artikel/${item.slug}`}>
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06 }}
+                className={`rounded-2xl overflow-hidden border transition-all cursor-pointer ${
+                  isDark
+                    ? "bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/[0.08]"
+                    : "bg-white border-gray-200 hover:border-[#00ccb0]/40 hover:shadow-[0_8px_25px_-10px_rgba(0,200,180,0.25)]"
+                }`}
+              >
+                <img
+                  src={item.image}
+                  className="w-full h-40 object-cover opacity-95"
+                />
 
-              <div className="p-4">
-                <div className="text-[11px] text-[#00ccb0] font-semibold mb-1">{item.category}</div>
+                <div className="p-4">
+                  <div className="text-[11px] text-[#00ccb0] font-semibold mb-1">
+                    {item.category}
+                  </div>
 
-                <div className={`font-semibold mb-2 line-clamp-2 ${
-                  isDark ? "text-gray-200" : "text-gray-800"
-                }`}>
-                  {item.title}
+                  <div
+                    className={`font-semibold mb-2 line-clamp-2 ${
+                      isDark ? "text-gray-200" : "text-gray-800"
+                    }`}
+                  >
+                    {item.title}
+                  </div>
+
+                  <div className="text-[12px] text-gray-500">{item.date}</div>
                 </div>
-
-                <div className="text-[12px] text-gray-500">{item.date}</div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </div>

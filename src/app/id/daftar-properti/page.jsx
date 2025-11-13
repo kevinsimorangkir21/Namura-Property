@@ -325,7 +325,7 @@ export default function ListingID() {
                     <div className="mt-4 flex items-center justify-between">
                       <span className="text-[#00ccb0] font-bold">{p.price}</span>
 
-                      <Link href={`id/daftar-properti/${p.id}-${slugify(title)}`}>
+                      <Link href={`/id/daftar-properti/${p.id}-${slugify(title)}`}>
                         <button className="px-4 py-2 rounded-lg border border-[#00ccb0] text-[#00ccb0] hover:bg-[#00ccb0]/10 transition text-sm font-semibold inline-flex items-center gap-2">
                           {t.viewDetail} <Building2 className="w-4 h-4" />
                         </button>

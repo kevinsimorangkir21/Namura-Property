@@ -209,7 +209,7 @@ export default function ArtikelPageID() {
                   </span>
 
                   <Link
-                    href={`/artikel/${a.slug}`}
+                    href={`/id/artikel/${a.slug}`}
                     className={`inline-flex items-center gap-1 font-medium ${
                       isDark ? "text-[#00ccb0]" : "text-[#00a48f]"
                     }`}

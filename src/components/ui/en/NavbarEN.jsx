@@ -194,7 +194,7 @@ export default function NavbarEN() {
           {/* LOGO */}
           <Link href="/en" className="flex items-center gap-3 group">
             <motion.img
-              src={isDark ? "/NP-TP-S.svg" : "/NP-TP-G-S.svg"}
+              src={isDark ? "/NP TP S.svg" : "/NP TP G S.svg"}
               className="w-9 h-9 transition-all duration-300 group-hover:scale-105"
               whileHover={{ rotate: 6 }}
             />

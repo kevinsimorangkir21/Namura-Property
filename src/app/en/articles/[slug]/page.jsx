@@ -22,20 +22,18 @@ export default function ArtikelDetailEN({ params }) {
   const [isDark, setIsDark] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Theme
+  /* THEME LISTENER */
   useEffect(() => {
-    const dark = document.documentElement.classList.contains("dark");
-    setIsDark(dark);
+    const updateDark = () =>
+      setIsDark(document.documentElement.classList.contains("dark"));
+    updateDark();
 
-    const observer = new MutationObserver(() =>
-      setIsDark(document.documentElement.classList.contains("dark"))
-    );
-
-    observer.observe(document.documentElement, { attributes: true });
-    return () => observer.disconnect();
+    const obs = new MutationObserver(updateDark);
+    obs.observe(document.documentElement, { attributes: true });
+    return () => obs.disconnect();
   }, []);
 
-  // Find article EN only
+  /* GET ARTICLE */
   const index = articlesEN.findIndex((a) => a.slug === slug);
   const article = articlesEN[index];
 
@@ -44,7 +42,7 @@ export default function ArtikelDetailEN({ params }) {
   const prev = articlesEN[index - 1];
   const next = articlesEN[index + 1];
 
-  // Share
+  /* SHARE FUNCTIONS */
   const handleCopy = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
@@ -52,7 +50,7 @@ export default function ArtikelDetailEN({ params }) {
   };
 
   const shareWA = () => {
-    const text = `${article.title} — ${window.location.href}`;
+    const text = `${article.title}\n${window.location.href}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
@@ -64,7 +62,7 @@ export default function ArtikelDetailEN({ params }) {
     );
   };
 
-  // UI EN
+  /* TRANSLATIONS */
   const t = {
     back: "Back to Articles",
     shareWA: "Share via WhatsApp",
@@ -83,57 +81,74 @@ export default function ArtikelDetailEN({ params }) {
     >
       <section className="max-w-4xl mx-auto px-6 md:px-8">
 
-        {/* Back */}
+        {/* BACK */}
         <Link
           href="/en/articles"
-          className={`inline-flex items-center gap-2 mb-8 text-sm font-medium ${
-            isDark ? "text-[#00ccb0]" : "text-[#00a48f]"
+          className={`inline-flex items-center gap-2 mb-10 text-sm font-semibold hover:opacity-80 transition ${
+            isDark ? "text-[#00ccb0]" : "text-[#009e8a]"
           }`}
         >
           <ArrowLeft className="w-4 h-4" /> {t.back}
         </Link>
 
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+        {/* HEADER */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
           <span
-            className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[12px] font-medium mb-3 ${
-              isDark ? "bg-[#00ccb0]/10 text-[#00ccb0]" : "bg-[#00ccb0]/15 text-[#009a86]"
+            className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[12px] font-medium mb-4 ${
+              isDark ? "bg-[#00ccb0]/10 text-[#00ccb0]" : "bg-[#00ccb0]/15 text-[#008e7b]"
             }`}
           >
             <Newspaper className="w-3.5 h-3.5" /> {article.category}
           </span>
 
-          <h1 className={`text-3xl md:text-4xl font-bold mb-3 ${
-            isDark ? "text-white" : "text-gray-900"
-          }`}>
+          <h1
+            className={`text-3xl md:text-4xl font-extrabold leading-tight mb-3 ${
+              isDark ? "text-white" : "text-gray-900"
+            }`}
+          >
             {article.title}
           </h1>
 
-          <div className={`flex gap-4 text-[13px] ${
-            isDark ? "text-gray-400" : "text-gray-600"
-          }`}>
+          {/* Date + Read time */}
+          <div
+            className={`flex gap-6 text-sm ${
+              isDark ? "text-gray-400" : "text-gray-600"
+            }`}
+          >
             <span className="flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5" /> {article.date}
+              <Calendar className="w-4 h-4" /> {article.date}
             </span>
             <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" /> {article.read}
+              <Clock className="w-4 h-4" /> {article.read}
             </span>
           </div>
         </motion.div>
 
-        {/* Image */}
+        {/* IMAGE */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className={`rounded-2xl overflow-hidden border my-10 ${
+          transition={{ duration: 0.4, delay: 0.05 }}
+          className={`rounded-2xl overflow-hidden border my-10 shadow-lg ${
             isDark ? "border-white/10" : "border-gray-200"
           }`}
         >
-          <img src={article.image} className="w-full h-[380px] object-cover" />
+          <motion.img
+            src={article.image}
+            className="w-full h-[380px] object-cover"
+            initial={{ scale: 1.03 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.6 }}
+          />
         </motion.div>
 
-        {/* Content */}
+        {/* CONTENT */}
         <article
-          className={`prose leading-relaxed ${
+          className={`prose max-w-none leading-relaxed ${
             isDark ? "prose-invert prose-p:text-gray-300" : "prose-p:text-gray-700"
           }`}
         >
@@ -142,38 +157,70 @@ export default function ArtikelDetailEN({ params }) {
           ))}
         </article>
 
-        {/* Share */}
-        <div className={`mt-10 flex flex-wrap gap-3 border-t pt-6 ${
-          isDark ? "border-white/10" : "border-gray-200"
-        }`}>
-          <button onClick={shareWA} className="btn-primary">
+        {/* SHARE SECTION */}
+        <div
+          className={`mt-12 flex flex-wrap gap-4 border-t pt-8 ${
+            isDark ? "border-white/10" : "border-gray-200"
+          }`}
+        >
+          <button
+            onClick={shareWA}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg 
+              bg-[#00ccb0] text-white font-medium hover:bg-[#00b39c] transition"
+          >
             <MessageCircle className="w-4 h-4" /> {t.shareWA}
           </button>
 
-          <button onClick={shareTwitter} className="btn-secondary">
+          <button
+            onClick={shareTwitter}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg 
+              border border-gray-300 dark:border-white/20
+              font-medium hover:bg-gray-100 dark:hover:bg-white/10 transition"
+          >
             <Twitter className="w-4 h-4 text-sky-400" /> {t.shareTW}
           </button>
 
-          <button onClick={handleCopy} className="btn-secondary">
+          <button
+            onClick={handleCopy}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg 
+              border border-gray-300 dark:border-white/20
+              font-medium hover:bg-gray-100 dark:hover:bg-white/10 transition"
+          >
             <Copy className="w-4 h-4" /> {copied ? t.copied : t.copy}
           </button>
         </div>
 
-        {/* Prev/Next */}
-        <div className={`mt-16 flex justify-between border-t pt-8 ${
-          isDark ? "border-white/10" : "border-gray-200"
-        }`}>
+        {/* PREV/NEXT */}
+        <div
+          className={`mt-16 flex justify-between gap-4 border-t pt-10 ${
+            isDark ? "border-white/10" : "border-gray-200"
+          }`}
+        >
           {prev ? (
-            <Link href={`/en/artikel/${prev.slug}`} className="nav-btn">
+            <Link
+              href={`/en/artikel/${prev.slug}`}
+              className="flex items-center gap-2 px-4 py-3 rounded-xl
+              border border-gray-300 dark:border-white/10 
+              hover:bg-gray-100 dark:hover:bg-white/10 transition text-sm font-medium"
+            >
               <ArrowLeft className="w-4 h-4" /> {t.prev}
             </Link>
-          ) : <div />}
+          ) : (
+            <div />
+          )}
 
           {next ? (
-            <Link href={`/en/artikel/${next.slug}`} className="nav-btn">
+            <Link
+              href={`/en/artikel/${next.slug}`}
+              className="flex items-center gap-2 px-4 py-3 rounded-xl
+              border border-gray-300 dark:border-white/10 
+              hover:bg-gray-100 dark:hover:bg-white/10 transition text-sm font-medium"
+            >
               {t.next} <ArrowRight className="w-4 h-4" />
             </Link>
-          ) : <div />}
+          ) : (
+            <div />
+          )}
         </div>
       </section>
     </main>

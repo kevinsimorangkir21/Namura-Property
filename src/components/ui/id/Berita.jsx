@@ -1,6 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+
+import { articlesID } from "@/data/articlesID";
 
 export default function Berita() {
   const [isDark, setIsDark] = useState(false);
@@ -18,37 +21,13 @@ export default function Berita() {
     return () => observer.disconnect();
   }, []);
 
-  // Konten Indonesia
+  // Ambil 4 berita terbaru
+  const latestNews = articlesID.slice(0, 4);
+
   const content = {
     title: "Berita & Insight",
     desc: "Update terbaru industri properti, ekonomi & tren pasar Indonesia.",
     button: "Lihat Semua Berita →",
-    news: [
-      {
-        title: "Harga Rumah Suburban Jabodetabek Naik 8.2% dalam 6 Bulan",
-        category: "Market Update",
-        date: "7 Nov 2025",
-        img: "/news/jabodetabek.png",
-      },
-      {
-        title: "Bank Mulai Longgarkan DP KPR untuk Milenial",
-        category: "KPR & Finance",
-        date: "6 Nov 2025",
-        img: "/news/dp-kpr.png",
-      },
-      {
-        title: "Developer Premium Masuk Kawasan Bogor Selatan",
-        category: "Investment",
-        date: "4 Nov 2025",
-        img: "/news/bogor.png",
-      },
-      {
-        title: "Properti Dekat Akses TOD Jadi Incaran Investor",
-        category: "Tren Properti",
-        date: "2 Nov 2025",
-        img: "/news/tod.png",
-      },
-    ],
   };
 
   return (
@@ -62,16 +41,25 @@ export default function Berita() {
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div>
-            <h2 className={`text-4xl font-black tracking-tight ${isDark ? "text-white" : "text-gray-900"}`}>
+            <h2
+              className={`text-4xl font-black tracking-tight ${
+                isDark ? "text-white" : "text-gray-900"
+              }`}
+            >
               {content.title}
             </h2>
 
-            <p className={`text-sm mt-2 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+            <p
+              className={`text-sm mt-2 ${
+                isDark ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
               {content.desc}
             </p>
           </div>
 
-          <button
+          <Link
+            href="/artikel"
             className={`px-4 py-2 rounded-lg border text-sm font-semibold inline-flex items-center gap-2 transition ${
               isDark
                 ? "border-[#00bba4] text-[#00ccb0] hover:bg-white/5"
@@ -79,37 +67,45 @@ export default function Berita() {
             }`}
           >
             {content.button}
-          </button>
+          </Link>
         </div>
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {content.news.map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06 }}
-              className={`rounded-2xl overflow-hidden border transition-all cursor-pointer ${
-                isDark
-                  ? "bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/[0.08]"
-                  : "bg-white border-gray-200 hover:border-[#00ccb0]/40 hover:shadow-[0_8px_25px_-10px_rgba(0,200,180,0.25)]"
-              }`}
-            >
-              <img src={item.img} className="w-full h-40 object-cover opacity-95" />
+          {latestNews.map((item, i) => (
+            <Link href={`/artikel/${item.slug}`} key={i}>
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06 }}
+                className={`rounded-2xl overflow-hidden border transition-all cursor-pointer ${
+                  isDark
+                    ? "bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/[0.08]"
+                    : "bg-white border-gray-200 hover:border-[#00ccb0]/40 hover:shadow-[0_8px_25px_-10px_rgba(0,200,180,0.25)]"
+                }`}
+              >
+                <img
+                  src={item.image}
+                  className="w-full h-40 object-cover opacity-95"
+                />
 
-              <div className="p-4">
-                <div className="text-[11px] text-[#00ccb0] font-semibold mb-1">{item.category}</div>
+                <div className="p-4">
+                  <div className="text-[11px] text-[#00ccb0] font-semibold mb-1">
+                    {item.category}
+                  </div>
 
-                <div className={`font-semibold mb-2 line-clamp-2 ${
-                  isDark ? "text-gray-200" : "text-gray-800"
-                }`}>
-                  {item.title}
+                  <div
+                    className={`font-semibold mb-2 line-clamp-2 ${
+                      isDark ? "text-gray-200" : "text-gray-800"
+                    }`}
+                  >
+                    {item.title}
+                  </div>
+
+                  <div className="text-[12px] text-gray-500">{item.date}</div>
                 </div>
-
-                <div className="text-[12px] text-gray-500">{item.date}</div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </div>

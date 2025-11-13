@@ -1,61 +1,60 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Instagram, Circle } from "lucide-react";
 
 export default function FooterID() {
   const [isDark, setIsDark] = useState(false);
-  const [status, setStatus] = useState("Online");
 
-  // === THEME DETECTION ===
+  // THEME TRACKING
   useEffect(() => {
-    const dark = document.documentElement.classList.contains("dark");
-    setIsDark(dark);
-
-    const observer = new MutationObserver(() => {
+    const check = () =>
       setIsDark(document.documentElement.classList.contains("dark"));
-    });
-    observer.observe(document.documentElement, { attributes: true });
-    return () => observer.disconnect();
+    check();
+
+    const obs = new MutationObserver(check);
+    obs.observe(document.documentElement, { attributes: true });
+    return () => obs.disconnect();
   }, []);
 
-  // === STATUS SIMULATED ===
-  useEffect(() => {
-    const timeout = setTimeout(() => setStatus("Online"), 500);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  const version = "v0.0.1";
-
+  // TEXT CONTENT
   const t = {
     desc: "Portal properti modern untuk memudahkan kamu menemukan hunian terbaik masa kini.",
     address: "JL Bunga Merak No. 03 Perumnas Way Kandis, Bandar Lampung, Indonesia",
-    nav: ["Beranda", "Rekomendasi", "Artikel", "Cari Agen", "Kontak"],
     navTitle: "Navigasi",
+    nav: [
+      { name: "Beranda", link: "/id" },
+      { name: "Rekomendasi", link: "/id/rekomendasi" },
+      { name: "Artikel", link: "/id/artikel" },
+      { name: "Cari Agen", link: "/id/cari-agen" },
+      { name: "Kontak", link: "/id/kontak" },
+    ],
     socialTitle: "Terhubung",
     socialDesc: "Ikuti update terbaru dari Namura Property.",
-    terms: "Syarat & Ketentuan",
-    privacy: "Kebijakan Privasi",
-    disclaimer: "Disclaimer",
-    cookies: "Kebijakan Cookie",
     changelog: "Catatan Versi",
     status: "Status Situs",
     online: "Online",
     rights: "Hak cipta dilindungi.",
+    terms: "Syarat & Ketentuan",
+    privacy: "Kebijakan Privasi",
+    disclaimer: "Disclaimer",
+    cookies: "Kebijakan Cookie",
   };
 
   return (
     <footer
       className={`relative overflow-hidden transition-colors duration-500 ${
-        isDark ? "bg-[#0b0f15] text-gray-400" : "bg-[#ffffff] text-gray-600"
+        isDark ? "bg-[#0b0f15] text-gray-400" : "bg-white text-gray-600"
       } pt-20 pb-12 border-t ${isDark ? "border-white/10" : "border-gray-200"}`}
     >
-      <div className="relative max-w-7xl mx-auto px-6 md:px-10 grid md:grid-cols-3 gap-12">
-        
+      <div className="max-w-7xl mx-auto px-6 md:px-10 grid md:grid-cols-3 gap-12">
+
         {/* BRAND */}
         <div>
           <div className="flex items-center gap-2 mb-5">
             <img
-              src={isDark ? "/NP TP S.svg" : "/NP TP Light.svg"}
+              src={isDark ? "/NP TP S.svg" : "/NP TP G S.svg"}
               alt="Namura Property"
               className="w-9 h-9"
             />
@@ -71,28 +70,28 @@ export default function FooterID() {
             {t.address}
           </p>
 
-          {/* Changelog */}
+          {/* Changelog + Status */}
           <div className="mt-5 flex items-center gap-3 text-sm">
-            <a
-              href="id/catatan-versi"
+            <Link
+              href="/id/catatan-versi"
               className={`inline-flex items-center gap-1 font-medium transition-colors ${
                 isDark ? "text-[#00ccb0]" : "text-[#009e8e]"
               }`}
             >
-              <i className="bi bi-journal-text"></i> {t.changelog}
-            </a>
+              {t.changelog}
+            </Link>
 
             <span className="text-gray-500">•</span>
 
-            <a
-              href="/status"
+            <Link
+              href="/id/status"
               className={`inline-flex items-center gap-1 font-medium ${
-                isDark ? "text-gray-300" : "text-gray-700"
+                isDark ? "text-gray-200" : "text-gray-700"
               }`}
             >
-              <i className="bi bi-circle-fill text-green-400 text-[10px]"></i>{" "}
+              <Circle className="w-2.5 h-2.5 text-green-400 fill-green-400" />
               {t.status}: {t.online}
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -101,17 +100,18 @@ export default function FooterID() {
           <h4 className={`font-semibold mb-3 ${isDark ? "text-white" : "text-gray-900"}`}>
             {t.navTitle}
           </h4>
+
           <ul className="space-y-2 text-sm">
             {t.nav.map((item) => (
-              <li key={item}>
-                <a
-                  href="#"
+              <li key={item.name}>
+                <Link
+                  href={item.link}
                   className={`hover:text-[#00ccb0] transition-colors ${
                     isDark ? "text-gray-400" : "text-gray-700"
                   }`}
                 >
-                  {item}
-                </a>
+                  {item.name}
+                </Link>
               </li>
             ))}
           </ul>
@@ -122,19 +122,20 @@ export default function FooterID() {
           <h4 className={`font-semibold mb-3 ${isDark ? "text-white" : "text-gray-900"}`}>
             {t.socialTitle}
           </h4>
+
           <p className="text-sm mb-4">{t.socialDesc}</p>
 
           <div className="flex gap-4">
             <a
               href="https://www.instagram.com/namurapropertyy/"
               target="_blank"
-              className={`w-9 h-9 flex items-center justify-center rounded-full border ${
+              className={`w-9 h-9 flex items-center justify-center rounded-full border transition ${
                 isDark
-                  ? "border-white/10 text-gray-300"
-                  : "border-gray-300 text-gray-700"
+                  ? "border-white/10 text-gray-300 hover:bg-white/10"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-100"
               }`}
             >
-              <i className="bi bi-instagram text-lg"></i>
+              <Instagram className="w-5 h-5" />
             </a>
           </div>
         </div>
@@ -142,39 +143,29 @@ export default function FooterID() {
 
       {/* LEGAL */}
       <div className="mt-10 flex flex-wrap gap-6 text-sm justify-center">
-        <a
-          href="#"
-          className={`hover:text-[#00ccb0] transition-colors ${ isDark ? "text-gray-400" : "text-gray-700" }`}
-        >
-          {t.terms}
-        </a>
-        <a
-          href="#"
-          className={`hover:text-[#00ccb0] transition-colors ${ isDark ? "text-gray-400" : "text-gray-700" }`}
-        >
-          {t.privacy}
-        </a>
-        <a
-          href="#"
-          className={`hover:text-[#00ccb0] transition-colors ${ isDark ? "text-gray-400" : "text-gray-700" }`}
-        >
-          {t.disclaimer}
-        </a>
-        <a
-          href="#"
-          className={`hover:text-[#00ccb0] transition-colors ${ isDark ? "text-gray-400" : "text-gray-700" }`}
-        >
-          {t.cookies}
-        </a>
+        {[t.terms, t.privacy, t.disclaimer, t.cookies].map((txt) => (
+          <Link
+            key={txt}
+            href="/id/legal"
+            className={`hover:text-[#00ccb0] transition-colors ${
+              isDark ? "text-gray-400" : "text-gray-700"
+            }`}
+          >
+            {txt}
+          </Link>
+        ))}
       </div>
 
-      {/* BOTTOM */}
+      {/* COPYRIGHT */}
       <div
         className={`mt-12 pt-6 border-t text-center text-sm ${
           isDark ? "border-white/10" : "border-gray-200"
         }`}
       >
-        © 2025 <strong className={isDark ? "text-white" : "text-gray-900"}>Namura Property</strong>.{" "}
+        © 2025{" "}
+        <strong className={isDark ? "text-white" : "text-gray-900"}>
+          Namura Property
+        </strong>.{" "}
         {t.rights}
       </div>
     </footer>
