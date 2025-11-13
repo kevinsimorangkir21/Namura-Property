@@ -65,7 +65,7 @@ export default function NavbarEN() {
   // LINKS — ENGLISH VERSION
   const navLinks = [
     { href: "/en", label: "Home" },
-    { href: "/en/listing", label: "Listing" },
+    { href: "/en/property-list", label: "Property List" },
     { href: "/en/articles", label: "Articles" },
     { href: "/en/guides", label: "Guides" },
     { href: "/en/about", label: "About" },
