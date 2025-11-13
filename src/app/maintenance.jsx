@@ -35,7 +35,7 @@ export default function MaintenancePage() {
   useEffect(() => {
     // buat objek target jam 11:00 hari ini (lokal mesin)
     const target = new Date();
-    target.setHours(11, 0, 0, 0); // jam 11:00:00.000 hari ini
+    target.setHours(11, 30, 0, 0); // jam 11:00:00.000 hari ini
 
     // jika sudah lewat jam 11 hari ini -> langsung tandai selesai
     const now = new Date().getTime();
