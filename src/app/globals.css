@@ -2,7 +2,8 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 /* === GOOGLE FONT INTER === */
-/* (Kamu tetap harus taro link google font di layout.jsx head ya)
+/* jangan lupa tambah link Google Font di head layout.jsx */
+/*
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 */
 
@@ -16,14 +17,23 @@
     "Segoe UI Emoji";
 
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
-  transition: background 0.4s ease, color 0.4s ease;
 }
 
 /* 🌙 Dark Mode Manual (via .dark class) */
 html.dark {
   --background: #0b0f15;
   --foreground: #ededed;
+}
+
+/* === THEME TRANSITION (AMAN) === */
+/* Hanya animasikan warna ketika theme berubah. */
+/* Tidak mempengaruhi semua elemen sepanjang waktu → tidak glitch navbar */
+html {
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+html.dark {
+  transition: background-color 0.35s ease, color 0.35s ease;
 }
 
 /* == Base Body == */
@@ -35,7 +45,6 @@ body {
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 /* Optional smoother scroll */
@@ -70,13 +79,6 @@ html {
   color: #0b0f15;
 }
 
-/* === Transition helper for theme changes === */
-*,
-*::before,
-*::after {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
 /* === Link defaults === */
 a {
   text-decoration: none;
@@ -92,4 +94,11 @@ a:hover {
   max-width: 1200px;
   margin-inline: auto;
   padding-inline: 1.5rem;
+}
+
+/* === FIX NAVBAR CLIPPING GHOST TEXT === */
+/* Pastikan whitespace aman dan tidak pernah wrap */
+nav a {
+  white-space: nowrap !important;
+  overflow: visible !important;
 }
