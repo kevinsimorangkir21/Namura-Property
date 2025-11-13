@@ -59,7 +59,7 @@ export default function Berita() {
           </div>
 
           <Link
-            href="/artikel"
+            href="/id/artikel"
             className={`px-4 py-2 rounded-lg border text-sm font-semibold inline-flex items-center gap-2 transition ${
               isDark
                 ? "border-[#00bba4] text-[#00ccb0] hover:bg-white/5"
@@ -73,7 +73,7 @@ export default function Berita() {
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {latestNews.map((item, i) => (
-            <Link href={`/artikel/${item.slug}`} key={i}>
+            <Link href={`/id/artikel/${item.slug}`} key={i}>
               <motion.div
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}

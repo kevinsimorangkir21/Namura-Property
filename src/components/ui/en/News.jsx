@@ -72,7 +72,7 @@ export default function News() {
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {latestNews.map((item, i) => (
-            <Link key={i} href={`/en/artikel/${item.slug}`}>
+            <Link key={i} href={`/en/arrticle/${item.slug}`}>
               <motion.div
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
