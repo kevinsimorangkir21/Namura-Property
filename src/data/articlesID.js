@@ -109,7 +109,7 @@ Stabilitas pasar membuka peluang baru bagi penjual dan pembeli, namun riset teta
     read: "5 menit baca",
     image: "/inovasi.png",
     content: `
-Rumah modular semakin populer di Indonesia karena proses pembangunan yang cepat dan efisien.
+Rumah modular semakkin populer di Indonesia karena proses pembangunan yang cepat dan efisien.
 Bangunan dibuat menggunakan komponen yang dirakit di pabrik, lalu dipasang di lokasi proyek.
 
 **Keunggulan rumah modular**
