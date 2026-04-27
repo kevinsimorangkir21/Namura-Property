@@ -1,5 +1,5 @@
-@import 'bootstrap-icons/font/bootstrap-icons.css';
 @import "tailwindcss";
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 
 /* === GOOGLE FONT INTER === */
 /* jangan lupa tambah link Google Font di head layout.jsx */
